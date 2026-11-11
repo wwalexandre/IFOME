@@ -9,6 +9,6 @@
  * Project URL e a chave publicável.
  */
 window.IFOMME_CONFIG = {
-  supabaseUrl: "",
-  supabaseKey: "",
+  supabaseUrl: "https://kykbaddhqlknvptsqdae.supabase.co",
+  supabaseKey: "sb_publishable_ngre5dAKnArhrdxD-n7PDA_kL5LSYLl",
 };

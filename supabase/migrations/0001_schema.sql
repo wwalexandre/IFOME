@@ -79,6 +79,7 @@ create index if not exists doacoes_updated_at_idx on public.doacoes (updated_at 
 create or replace function public.touch_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   new.updated_at := now();
@@ -135,10 +136,12 @@ $$;
 
 -- Dados privados: cada pessoa só enxerga e escreve a própria linha.
 drop policy if exists user_data_propria on public.user_data;
+-- auth.uid() entre parênteses e com select para o Postgres avaliar uma vez
+-- por consulta, e não uma vez por linha.
 create policy user_data_propria on public.user_data
   for all to authenticated
-  using (uid = auth.uid())
-  with check (uid = auth.uid());
+  using (uid = (select auth.uid()))
+  with check (uid = (select auth.uid()));
 
 -- Lista de administradores: leitura para quem está autenticado, escrita só
 -- pelo painel do Supabase (service role ignora RLS).

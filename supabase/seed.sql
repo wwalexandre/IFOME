@@ -3,14 +3,26 @@
 -- Todas as instituições abaixo são fictícias. Nenhum CNPJ, endereço, chave
 -- Pix ou pessoa real aparece aqui, como o regulamento do evento exige.
 --
--- Rodar depois de 0001_schema.sql. Pode rodar de novo: usa upsert.
+-- As datas são relativas ao momento em que este arquivo roda, então o mural
+-- nunca aparece com publicações de um ano atrás.
+--
+-- Rodar depois de 0001_schema.sql. Pode rodar quantas vezes quiser.
+
+-- Milissegundos desde a época, que é o formato que o aplicativo usa.
+create or replace function pg_temp.ms_atras(dias numeric)
+returns bigint
+language sql
+immutable
+as $$
+  select (extract(epoch from now()) * 1000)::bigint - (dias * 86400000)::bigint;
+$$;
 
 insert into public.ongs (id, data) values
 ('casa-do-caminho', jsonb_build_object(
   'nome','Casa do Caminho',
   'causa','Fome',
   'bairro','Brás','cidade','São Paulo',
-  'km',1.2,'status','verificado','nota',4.8,'benef',320,'indic',14,
+  'km',1.2,'status','verificado','nota',96,'benef',320,'indic',14,
   'aceita', jsonb_build_array('alimentos','higiene','roupas'),
   'needs', jsonb_build_array(
     jsonb_build_object('i','Arroz e feijão','c','alimentos','q',80,'m',1),
@@ -18,13 +30,13 @@ insert into public.ongs (id, data) values
     jsonb_build_object('i','Kits de higiene','c','higiene','q',25,'m',0)),
   'desc','Cozinha comunitária que serve 320 refeições por dia para famílias do Brás e da Mooca. Recebe doações de segunda a sábado.',
   'horario','seg. a sáb., 8h às 17h',
-  'coleta', true, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', 1762800000000)),
+  'coleta', true, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', pg_temp.ms_atras(26))),
 
 ('rede-maos-dadas', jsonb_build_object(
   'nome','Rede Mãos Dadas',
   'causa','Crianças',
   'bairro','Capão Redondo','cidade','São Paulo',
-  'km',3.4,'status','verificado','nota',4.6,'benef',180,'indic',9,
+  'km',3.4,'status','verificado','nota',91,'benef',180,'indic',9,
   'aceita', jsonb_build_array('alimentos','material','roupas','voluntariado'),
   'needs', jsonb_build_array(
     jsonb_build_object('i','Material escolar para o reforço','c','material','q',60,'m',1),
@@ -32,13 +44,13 @@ insert into public.ongs (id, data) values
     jsonb_build_object('i','Voluntário para aula de reforço','c','voluntariado','q',8,'m',1)),
   'desc','Reforço escolar e contraturno para 180 crianças de 6 a 14 anos. Precisa de material e de gente com paciência.',
   'horario','seg. a sex., 13h às 18h',
-  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', 1762810000000)),
+  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', pg_temp.ms_atras(19))),
 
 ('abrigo-sao-jose', jsonb_build_object(
   'nome','Abrigo São José',
   'causa','Pessoas em situação de rua',
   'bairro','Santa Cecília','cidade','São Paulo',
-  'km',2.1,'status','verificado','nota',4.9,'benef',95,'indic',21,
+  'km',2.1,'status','verificado','nota',98,'benef',95,'indic',21,
   'aceita', jsonb_build_array('alimentos','roupas','higiene','dinheiro'),
   'needs', jsonb_build_array(
     jsonb_build_object('i','Cobertores e agasalhos','c','roupas','q',120,'m',1),
@@ -47,7 +59,7 @@ insert into public.ongs (id, data) values
   'desc','Acolhimento noturno para 95 pessoas. No frio a demanda por cobertor dobra em uma semana.',
   'horario','todos os dias, 18h às 22h',
   'pix','00.000.000/0001-00',
-  'coleta', true, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', 1762820000000)),
+  'coleta', true, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', pg_temp.ms_atras(33))),
 
 ('cozinha-da-vila', jsonb_build_object(
   'nome','Cozinha da Vila',
@@ -60,20 +72,20 @@ insert into public.ongs (id, data) values
     jsonb_build_object('i','Hortifruti','c','alimentos','q',35,'m',0)),
   'desc','Grupo de vizinhas que cozinha 60 marmitas às terças e quintas. Em processo de inspeção.',
   'horario','ter. e qui., 9h às 14h',
-  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', 1762830000000)),
+  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', pg_temp.ms_atras(6))),
 
 ('lar-das-avos', jsonb_build_object(
   'nome','Lar das Avós',
   'causa','Idosos',
   'bairro','Penha','cidade','São Paulo',
-  'km',7.3,'status','verificado','nota',4.4,'benef',48,'indic',6,
+  'km',7.3,'status','verificado','nota',88,'benef',48,'indic',6,
   'aceita', jsonb_build_array('alimentos','higiene','voluntariado'),
   'needs', jsonb_build_array(
     jsonb_build_object('i','Alimentos de consistência pastosa','c','alimentos','q',25,'m',1),
     jsonb_build_object('i','Voluntário para tarde de leitura','c','voluntariado','q',4,'m',0)),
   'desc','Casa de repouso sem fins lucrativos com 48 idosos. A cozinha precisa de alimentos de preparo fácil.',
   'horario','seg. a sex., 9h às 16h',
-  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', 1762840000000)),
+  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', pg_temp.ms_atras(12))),
 
 ('instituto-semear', jsonb_build_object(
   'nome','Instituto Semear',
@@ -84,27 +96,27 @@ insert into public.ongs (id, data) values
   'needs', jsonb_build_array(
     jsonb_build_object('i','Necessidades a confirmar','c','alimentos','q',0,'m',1)),
   'desc','Cadastro recebido. Aguardando inspeção.',
-  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', 1762850000000))
+  'coleta', false, 'exemplo', true, 'insp', '{}'::jsonb, 'ts', pg_temp.ms_atras(2)))
 on conflict (id) do update set data = excluded.data;
 
 insert into public.posts (id, data) values
 ('post-cobertor', jsonb_build_object(
-  'ong','abrigo-sao-jose','tipo','urgente',
+  'ong','abrigo-sao-jose','tipo','urgente','ap',34,
   't','A frente fria chega quinta e já estamos sem cobertor de reserva. Precisamos de 120 peças até quarta. Buscamos na sua casa se for na região central.',
-  'need','Cobertores e agasalhos','exemplo', true,'ts', 1762900000000)),
+  'need','Cobertores e agasalhos','exemplo', true,'ts', pg_temp.ms_atras(0.2))),
 
 ('post-marmitas', jsonb_build_object(
-  'ong','casa-do-caminho','tipo','realizada',
+  'ong','casa-do-caminho','tipo','realizada','ap',112,
   't','Na semana passada recebemos 140 kg de hortifruti de três feiras do Brás. Viraram 620 marmitas. Obrigado a quem doou e a quem buscou.',
-  'exemplo', true,'ts', 1762910000000)),
+  'exemplo', true,'ts', pg_temp.ms_atras(1.2))),
 
 ('post-mutirao', jsonb_build_object(
-  'ong','rede-maos-dadas','tipo','evento',
+  'ong','rede-maos-dadas','tipo','evento','ap',47,
   't','Mutirão de volta às aulas no sábado, das 9h às 14h. Montamos kits escolares e precisamos de 10 voluntários.',
-  'ev','Sábado, 9h às 14h','exemplo', true,'ts', 1762920000000)),
+  'ev','Sábado, 9h às 14h','exemplo', true,'ts', pg_temp.ms_atras(2.2))),
 
 ('post-obrigado', jsonb_build_object(
-  'ong','lar-das-avos','tipo','agradecimento',
+  'ong','lar-das-avos','tipo','agradecimento','ap',19,
   't','A padaria da esquina passou a mandar o excedente de pão três vezes por semana. Pequeno para quem doa, enorme para quem recebe.',
-  'exemplo', true,'ts', 1762930000000))
+  'exemplo', true,'ts', pg_temp.ms_atras(4)))
 on conflict (id) do update set data = excluded.data;

@@ -139,11 +139,21 @@ async function conectar() {
 
   // Conta anônima: o visitante não precisa se cadastrar para experimentar,
   // mas tem um uid estável, que é o que o RLS usa.
+  //
+  // Se a conta anônima estiver desligada no painel, o app continua de pé em
+  // modo de leitura, porque a política de select vale para todo mundo. É
+  // melhor mostrar as instituições do que não abrir.
   let { data: sessao } = await supabase.auth.getSession();
   if (!sessao.session) {
     const { error } = await supabase.auth.signInAnonymously();
-    if (error) throw error;
-    ({ data: sessao } = await supabase.auth.getSession());
+    if (error) {
+      console.warn(
+        "IFOMME: conta anônima indisponível, seguindo só com leitura.",
+        error.message,
+      );
+    } else {
+      ({ data: sessao } = await supabase.auth.getSession());
+    }
   }
 
   const uid = sessao.session?.user?.id || null;
