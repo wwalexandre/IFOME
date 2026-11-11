@@ -41,7 +41,7 @@ O aplicativo mudou em duas linhas: carrega os dois scripts e pega a conexão do 
 | Repositório público no GitHub, criado depois de 04/11 às 21h | Repo criado em 10/11. Falta publicar |
 | Sem fork e sem histórico importado | Ok, repositório novo |
 | Licença que permita ao júri ler, executar e testar | MIT |
-| Link de demo funcionando, em HTTPS | **Pendente.** Depende da troca do banco |
+| Link de demo funcionando, em HTTPS | Funciona local, com banco e tempo real. Falta publicar |
 | Página pública do projeto, com título | Pronta, falta publicar |
 | Vídeo de até 3 minutos | **Pendente.** É do time |
 | Demo sem dados pessoais reais | Ok. Tudo é dado de exemplo, inclusive o CNPJ |

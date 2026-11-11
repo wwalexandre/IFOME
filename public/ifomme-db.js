@@ -18,6 +18,10 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 const PREFIXO_USUARIO = "data/users/";
 
+// Cada escuta precisa do próprio canal. Dois canais com o mesmo nome se
+// atropelam, e a tela que assinou primeiro para de receber atualização.
+let proximoCanal = 0;
+
 /** Traduz o caminho da coleção para tabela e, quando for o caso, dono. */
 function resolver(caminho) {
   if (caminho.startsWith(PREFIXO_USUARIO)) {
@@ -26,8 +30,41 @@ function resolver(caminho) {
   return { tabela: caminho, uid: null };
 }
 
+function ehObjetoSimples(v) {
+  return !!v && typeof v === "object" && !Array.isArray(v);
+}
+
+/**
+ * Mescla em profundidade, que é como o aplicativo espera que um update se
+ * comporte: gravar `{items:{abc:...}}` acrescenta uma doação, não substitui
+ * a lista inteira. Array e valor simples substituem.
+ */
+function mesclar(base, novo) {
+  const saida = { ...base };
+  for (const chave of Object.keys(novo)) {
+    const atual = saida[chave];
+    const valor = novo[chave];
+    saida[chave] =
+      ehObjetoSimples(atual) && ehObjetoSimples(valor)
+        ? mesclar(atual, valor)
+        : valor;
+  }
+  return saida;
+}
+
 function criarDb(supabase) {
-  return {
+  const db = {
+    /**
+     * Atalho para um documento por caminho, como em `db.doc("aprov/abc")`.
+     * O aplicativo usa as duas formas: pela coleção e por caminho direto.
+     */
+    doc(caminho) {
+      const corte = caminho.lastIndexOf("/");
+      const colecao = caminho.slice(0, corte);
+      const id = caminho.slice(corte + 1);
+      return db.collection(colecao).doc(id);
+    },
+
     collection(caminho) {
       const { tabela, uid } = resolver(caminho);
 
@@ -69,7 +106,7 @@ function criarDb(supabase) {
 
               const { error } = await supabase
                 .from(tabela)
-                .upsert({ ...chave, data: { ...(atual?.data || {}), ...parcial } });
+                .upsert({ ...chave, data: mesclar(atual?.data || {}, parcial) });
               if (error) throw error;
             },
 
@@ -98,7 +135,7 @@ function criarDb(supabase) {
           emitir();
 
           const canal = supabase
-            .channel(`ifomme:${tabela}:${uid || "todos"}`)
+            .channel(`ifomme:${tabela}:${uid || "todos"}:${proximoCanal++}`)
             .on(
               "postgres_changes",
               {
@@ -119,6 +156,8 @@ function criarDb(supabase) {
       };
     },
   };
+
+  return db;
 }
 
 async function conectar() {
