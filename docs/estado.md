@@ -19,18 +19,20 @@ Fora desse ambiente, `window.claude` não existe. O código trata o caso sem que
 
 Isso não é defeito de quem escreveu. É o ambiente de origem. Mas precisa ser resolvido antes da submissão, porque o regulamento exige **link de demo funcionando**, que fique no ar durante toda a avaliação.
 
-## A saída
+## A saída, já escrita
 
-Trocar o adaptador de dados. O código já isola o acesso ao banco num objeto `store` com os métodos `set`, `del`, `live` e `ref`, e um caminho alternativo em memória. É um ponto de troca contido, não uma reescrita.
+**Decidido em 11/11: Supabase.** A graça do produto é doador e instituição verem a mesma doação mudando de etapa, e isso só existe com banco compartilhado.
 
-Alternativas, da mais rápida para a mais completa:
+O código já isolava o acesso ao banco num objeto `store` com `set`, `update`, `del`, `live` e `ref`. Em vez de mexer no aplicativo, foi escrito um adaptador que entrega ao app a mesma API de documentos que ele esperava, agora sobre o Supabase:
 
-| Opção | O que dá | Custo | Serve para |
-|---|---|---|---|
-| **A. localStorage com dados de exemplo** | O app abre populado e salva no navegador de quem visita | Algumas horas | Demo individual. Não tem conta nem dado compartilhado |
-| **B. Supabase** | Postgres, autenticação, dados compartilhados de verdade entre doador e instituição | Alguns dias | Demo real e nota melhor em implementação técnica |
+- `public/ifomme-db.js` traduz coleção, documento e escuta em tempo real para tabelas, linhas e Realtime
+- `supabase/migrations/0001_schema.sql` cria as tabelas, os gatilhos de `updated_at`, as políticas de RLS e a publicação de Realtime
+- `supabase/seed.sql` popula seis instituições e quatro publicações de exemplo
+- `public/config.js` guarda a URL e a chave publicável
 
-**Recomendação:** B. A graça do produto é doador e instituição verem a mesma doação mudando de etapa, e isso só existe com banco compartilhado. A opção A serve de rede de segurança se o tempo apertar.
+O aplicativo mudou em duas linhas: carrega os dois scripts e pega a conexão do adaptador em vez de `window.claude`.
+
+**Enquanto a configuração estiver vazia, nada quebra.** O adaptador devolve `null` e o app entra no mesmo modo somente leitura de antes. Falta só criar o projeto no Supabase e preencher `public/config.js`. Ver [supabase.md](supabase.md).
 
 ## Checklist de conformidade com o regulamento
 

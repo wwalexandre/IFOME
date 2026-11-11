@@ -289,6 +289,9 @@ label.chip input{accent-color:var(--brand)}
 </div>
 <div id="layer"></div>
 
+<script>window.IFOMME_READY=new Promise(r=>{window.__ifommeConectado=r})</script>
+<script src="config.js"></script>
+<script type="module" src="ifomme-db.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -434,7 +437,7 @@ function norm(d){const v={...BLANK,...d.data(),id:d.id};if(!Array.isArray(v.acei
 async function boot(){
  const timer=setTimeout(()=>{if(!ready||!state.fresh){state.msg="Ainda não foi possível acessar o banco de dados. Continuamos tentando.";soft()}},10000);
  let user=null;
- try{db=window.claude&&window.claude.use?await window.claude.use("db"):null;user=db?await window.claude.use("user"):null;uid=user?await user.id():null}catch(_){db=null}
+ try{const conexao=await window.IFOMME_READY;db=conexao.db;user=conexao.user;uid=user?await user.id():null}catch(_){db=null}
  if(!db){clearTimeout(timer);ready=true;state.offline=true;state.pfReady=true;render();return}
  try{isAdmin=!!(user&&await user.canEdit());U=user}catch(_){}
  let wait=0;const got={},map=s=>{const n={};s.docs.forEach(d=>n[d.id]=d.data());return n};

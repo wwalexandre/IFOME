@@ -34,7 +34,7 @@ O IFOMME é um aplicativo que liga quem tem o que doar a instituições próxima
 
 ## O que falta
 
-Ver [docs/estado.md](docs/estado.md). O ponto principal: o protótipo foi escrito sobre a camada de dados do ambiente em que foi criado e precisa de um banco próprio para funcionar fora dele.
+Ligar o banco: criar o projeto no Supabase e preencher `public/config.js`. O passo a passo está em [docs/supabase.md](docs/supabase.md), e o estado geral do projeto em [docs/estado.md](docs/estado.md).
 
 ## Como executar
 
@@ -53,7 +53,7 @@ Não precisa de variável de ambiente para rodar a página pública.
 |---|---|
 | Página pública | Next.js 16, React 19, Tailwind 4, TypeScript |
 | Protótipo | HTML, CSS e JavaScript em um arquivo, sem framework |
-| Banco | a definir, ver `docs/estado.md` |
+| Banco | Supabase: Postgres, RLS, conta anônima e Realtime |
 | Deploy | Vercel |
 
 ## Dados
