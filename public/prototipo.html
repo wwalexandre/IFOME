@@ -1,0 +1,784 @@
+<!doctype html><html><head><meta charset=utf8><title>IFOMME - doe o que sobra para quem precisa</title><meta name="description" content="O IFOMME conecta quem tem o que doar com instituicoes perto, com regras de seguranca alimentar e acompanhamento de cada etapa da doacao."><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+/* Layout: app shell — left rail on desktop, bottom tab bar on phone; content column of cards & panels */
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --sunk:#F4F4F4; --line:#EBEBEB;
+  --ink:#3B3B3B; --muted:#7A7A7A; --brand:#E5132E; --brand-ink:#FFFFFF;
+  --accent:#FFB400; --accent-soft:#FFF3D1; --brand-soft:#FDE6E9;
+  --ok:#119451; --ok-soft:#E1F5EA; --warn:#A86E00; --crit:#E5132E; --crit-soft:#FDE6E9;
+  --display:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --body:"Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --fs:15px; --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141414; --surface:#1E1E1E; --sunk:#2A2A2A; --line:#333333;
+  --ink:#F2F2F2; --muted:#A8A8A8; --brand:#FF3B50; --brand-ink:#FFFFFF;
+  --accent:#FFC233; --accent-soft:#3D2C08; --brand-soft:#42171C;
+  --ok:#4CC98A; --ok-soft:#15301F; --warn:#FFC233; --crit:#FF3B50; --crit-soft:#42171C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141414; --surface:#1E1E1E; --sunk:#2A2A2A; --line:#333333;
+  --ink:#F2F2F2; --muted:#A8A8A8; --brand:#FF3B50; --brand-ink:#FFFFFF;
+  --accent:#FFC233; --accent-soft:#3D2C08; --brand-soft:#42171C;
+  --ok:#4CC98A; --ok-soft:#15301F; --warn:#FFC233; --crit:#FF3B50; --crit-soft:#42171C; color-scheme:dark}
+html.big{--fs:17px}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:var(--fs);line-height:1.5;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100%}
+/* rail */
+.rail{position:sticky;top:0;height:100vh;padding:24px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px;background:var(--surface)}
+.logo{display:flex;align-items:center;gap:10px;padding:0 8px 18px}
+.logo b{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.02em}
+.logo small{display:block;font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:0;background:none;text-align:left;color:var(--muted);font-weight:600;width:100%}
+.nav svg{width:20px;height:20px;flex:none}
+.nav:hover{background:var(--sunk);color:var(--ink)}
+.nav[aria-current="page"]{background:var(--brand-soft);color:var(--brand)}
+.rail .spacer{flex:1}
+.mini{font-size:12px;color:var(--muted);padding:8px 12px}
+/* main */
+main{min-width:0;padding-block:20px 100px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 14px}
+.search input{border:0;background:none;outline:none;flex:1;min-width:0}
+.iconbtn{position:relative;width:40px;height:40px;border-radius:999px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.iconbtn svg{width:18px;height:18px}
+.dot{position:absolute;top:6px;right:7px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--crit);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.head h1{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-.02em}
+.head p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+.btn{border:0;border-radius:999px;padding:10px 18px;font-weight:700;background:var(--brand);color:var(--brand-ink);display:inline-flex;align-items:center;gap:8px}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn.accent{background:var(--accent);color:#2A1A04}
+.btn.sm{padding:7px 12px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.02em;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--accent-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-neutral{background:var(--sunk);color:var(--muted)}
+.muted{color:var(--muted)}
+.label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.bar{height:8px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand);border-radius:999px}
+.bar.urg i{background:var(--accent)}
+.num{font-variant-numeric:tabular-nums}
+/* mural */
+.muralgrid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+.feed{display:flex;flex-direction:column;gap:14px;min-width:0}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.post.urgent{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
+.phead{display:flex;gap:12px;align-items:center}
+.avatar{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#fff;flex:none}
+.phead .who{min-width:0;flex:1}
+.phead .who b{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.phead .who span{font-size:13px;color:var(--muted)}
+.post p{margin:0}
+.actions{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
+.act{border:0;background:none;padding:6px 10px;border-radius:8px;font-weight:600;font-size:13px;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+.act:hover{background:var(--sunk);color:var(--ink)}
+.act.on{color:var(--crit)}
+.act svg{width:16px;height:16px}
+.composer textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;resize:vertical;min-height:70px}
+.composer .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+select,.inp{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;min-width:0}
+.side{display:flex;flex-direction:column;gap:14px;position:sticky;top:20px}
+.side h3{font-size:16px;margin-bottom:10px}
+.need{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+.need:last-child{border-bottom:0}
+.need .t{display:flex;justify-content:space-between;gap:8px;font-size:13.5px}
+.impact{background:var(--brand);color:#fff;border:0}
+/* delivery-app look */
+h1,h2,h3,.logo b,.mobilelogo{font-weight:900}
+.head h1{font-weight:900;letter-spacing:-.01em}
+.rail{background:var(--surface)}
+.nav[aria-current="page"]{background:none;color:var(--brand)}
+.chip{border-color:var(--line);color:var(--ink);font-weight:700}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.search{background:var(--sunk);border-color:transparent;border-radius:10px;padding:11px 14px}
+.search svg{color:var(--brand)}
+.btn{border-radius:8px;font-family:var(--display);font-weight:800}
+.btn.accent{background:var(--brand);color:#fff}
+.btn.ghost{color:var(--brand);border-color:var(--line)}
+.panel,.post,.ong,.stat,.match,.qitem{border-color:var(--line);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.post.urgent{border-color:var(--line);box-shadow:0 2px 10px rgba(0,0,0,.05),inset 4px 0 0 var(--brand)}
+.avatar{border-radius:50%}
+.addr{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);border:0;background:none;padding:0}
+.addr b{color:var(--ink);font-size:14px}
+.addr svg{color:var(--brand)}
+.rowscroll{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.rowscroll::-webkit-scrollbar{display:none}
+.circ{flex:none;width:84px;display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;padding:0;font-size:12.5px;font-weight:700;text-align:center;scroll-snap-align:start}
+.circ span.c{width:68px;height:68px;border-radius:50%;background:var(--sunk);display:grid;place-items:center;transition:transform .15s}
+.circ span.c svg{width:30px;height:30px;color:var(--brand)}
+.circ:hover span.c{transform:scale(1.06)}
+.banner{flex:none;width:min(380px,82%);aspect-ratio:2.2/1;border-radius:14px;padding:18px 20px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;border:0;text-align:left;scroll-snap-align:start;position:relative;overflow:hidden}
+.banner b{font-family:var(--display);font-weight:900;font-size:22px;line-height:1.1;max-width:75%}
+.banner span{font-size:13px;opacity:.95;max-width:75%}
+.banner i{position:absolute;right:-20px;top:-20px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.16)}
+.banner i+i{right:30px;top:60px;width:90px;height:90px;background:rgba(255,255,255,.12)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sec h2{font-size:19px}
+.sec button{border:0;background:none;color:var(--brand);font-weight:800;font-size:13.5px}
+.lojas{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:4px 20px}
+.loja{display:flex;gap:14px;align-items:center;padding:12px 6px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;border-radius:0}
+.loja .avatar{width:58px;height:58px;font-size:18px;border:1px solid var(--line)}
+.loja .nm{font-weight:800;font-family:var(--display);font-size:15.5px}
+.loja .mt{font-size:13px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.star{color:var(--accent);font-weight:800}
+.free{color:var(--ok);font-weight:700}
+.impact .big{font-family:var(--display);font-weight:800;font-size:34px;line-height:1}
+.impact .label{color:inherit;opacity:.8}
+/* doar */
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.step{flex:1;min-width:110px;padding:10px 12px;border-radius:10px;background:var(--sunk);font-size:13px;font-weight:600;color:var(--muted)}
+.step b{display:block;font-family:var(--display);font-size:12px;letter-spacing:.06em}
+.step.on{background:var(--ink);color:var(--bg)}
+.step.done{background:var(--brand-soft);color:var(--brand)}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.cat{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.cat svg{width:26px;height:26px;color:var(--brand)}
+.cat b{font-size:15px}
+.cat span{font-size:12.5px;color:var(--muted)}
+.cat[aria-pressed="true"]{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand) inset;background:var(--brand-soft)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:600;font-size:13.5px}
+.match{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.match.best{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand)}
+.score{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:17px;background:conic-gradient(var(--brand) calc(var(--v)*1%),var(--sunk) 0)}
+.score span{width:44px;height:44px;border-radius:50%;background:var(--surface);display:grid;place-items:center}
+.why{font-size:12.5px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+/* ongs */
+.ongs{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.ong{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
+.ong h3{font-size:17px}
+.ong .meta{font-size:13px;color:var(--muted)}
+.ong .foot{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+/* inspeção */
+.insp{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start}
+.queue{display:flex;flex-direction:column;gap:8px}
+.qitem{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px;text-align:left;display:flex;flex-direction:column;gap:4px}
+.qitem[aria-current="true"]{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand)}
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.check:last-of-type{border-bottom:0}
+.check input{width:20px;height:20px;accent-color:var(--brand);margin-top:2px;flex:none}
+.check .w{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+.gauge{display:flex;align-items:center;gap:16px;padding:14px;border-radius:12px;background:var(--sunk);flex-wrap:wrap}
+.gauge .big{font-family:var(--display);font-weight:800;font-size:40px;line-height:1}
+/* impacto */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.stat .big{font-family:var(--display);font-weight:800;font-size:30px;margin-top:4px}
+.track{display:flex;flex-direction:column;gap:14px}
+.tl{display:flex;gap:0;margin-top:10px;overflow-x:auto}
+.tl .s{flex:1;min-width:92px;position:relative;padding-top:18px;font-size:12px;color:var(--muted)}
+.tl .s::before{content:"";position:absolute;top:5px;left:0;right:0;height:3px;background:var(--sunk)}
+.tl .s::after{content:"";position:absolute;top:0;left:0;width:13px;height:13px;border-radius:50%;background:var(--surface);border:3px solid var(--line)}
+.tl .s.done::before{background:var(--brand)}
+.tl .s.done::after{border-color:var(--brand);background:var(--brand)}
+.tl .s.cur::after{border-color:var(--accent);background:var(--accent)}
+.tl .s.done,.tl .s.cur{color:var(--ink);font-weight:600}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:12px;border:1px dashed var(--line);font-size:13px}
+.badge.got{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.badge i{font-style:normal;font-family:var(--display);font-weight:800;font-size:18px}
+/* overlays */
+.scrim{position:fixed;inset:0;background:rgba(5,15,10,.45);z-index:40;display:flex;justify-content:flex-end}
+.drawer{width:min(460px,100%);height:100%;background:var(--surface);overflow-y:auto;padding:22px max(20px,env(safe-area-inset-right,0px)) 40px 20px;display:flex;flex-direction:column;gap:16px}
+.drawer .x{align-self:flex-end}
+.pop{position:fixed;top:64px;right:max(16px,env(safe-area-inset-right,0px));width:min(340px,calc(100% - 32px));background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.18);z-index:45;padding:8px}
+.notif{padding:10px;border-radius:10px;display:flex;gap:10px;font-size:13.5px}
+.notif.new{background:var(--brand-soft)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;z-index:60;font-size:14px;max-width:calc(100% - 32px)}
+.tabbar{display:none}
+#view{display:flex;flex-direction:column;gap:20px;min-width:0}
+.chat{display:grid;grid-template-columns:320px 1fr;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;height:min(640px,calc(100vh - 230px));min-height:420px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.clist{overflow-y:auto;padding:10px 6px;border-right:1px solid var(--line);min-width:0}
+.citem{display:flex;gap:12px;align-items:center;width:100%;padding:10px 8px;border:0;background:none;border-radius:10px;text-align:left}
+.citem:hover{background:var(--sunk)}
+.citem[aria-current="true"]{background:var(--brand-soft)}
+.cn{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.cn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.cn span{font-size:11.5px;flex:none}
+.cl{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpane{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--surface)}
+.chead{display:flex;gap:10px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.msgs{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:8px;background:var(--sunk);min-height:0}
+.msg{display:flex;flex-direction:column;align-items:flex-start;gap:2px;max-width:78%}
+.msg.me{align-self:flex-end;align-items:flex-end}
+.msg span{font-size:10.5px;color:var(--muted)}
+.bub{background:var(--surface);padding:9px 13px;border-radius:16px 16px 16px 4px;overflow-wrap:anywhere;white-space:pre-wrap}
+.msg.me .bub{background:var(--brand);color:#fff;border-radius:16px 16px 4px 16px}
+.cform{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.cform .inp{flex:1}
+.cform .btn svg{width:18px;height:18px}
+.backm{display:none}
+.btn svg{width:18px;height:18px;flex:none}
+.loja .mt2{gap:2px 12px}
+.tl .s{padding-right:10px}
+.step{min-width:0}
+.nav .dot{position:static;margin-left:auto}
+.tabbar .nav{position:relative}
+.tabbar .nav .dot{position:absolute;top:2px;left:calc(50% + 6px);margin:0}
+button.notif{border:0;background:none;width:100%;text-align:left}
+button.notif:hover{background:var(--sunk)}
+label.chip{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+label.chip input{accent-color:var(--brand)}
+@media (max-width:760px){.topbar .search{order:3;flex-basis:100%}.mobilelogo{margin-right:auto}.steps{display:grid;grid-template-columns:1fr 1fr}.lojas .loja:nth-child(n+5){display:none}}
+.legal{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:10px;background:var(--accent-soft);font-size:13.5px}
+.legal b{font-family:var(--display);font-weight:800}
+.legal a,.lk{color:var(--brand);font-weight:700;text-decoration:underline}
+.lk{border:0;background:none;padding:0;font-size:inherit}
+.rules{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.drawer a{color:var(--brand);font-weight:700}
+@media (max-width:760px){.chat{grid-template-columns:1fr;height:calc(100vh - 250px)}.chat .hidem{display:none}.clist{border-right:0}.backm{display:grid}.tabbar .nav{font-size:10px}}
+.sample{font-size:12px;color:var(--muted);background:var(--sunk);border-radius:8px;padding:6px 10px;align-self:flex-start}
+@media (max-width:900px){
+  .muralgrid,.insp{grid-template-columns:1fr}
+  .side{position:static}
+}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  .rail{display:none}
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
+  .tabbar .nav{flex-direction:column;gap:2px;font-size:11px;padding:6px 2px;align-items:center;text-align:center}
+  .match{grid-template-columns:auto 1fr}
+  .match .go{grid-column:1/-1}
+  .mobilelogo{display:flex!important}
+}
+.mobilelogo{display:none;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:20px}
+@media (prefers-reduced-motion:no-preference){.post,.ong,.match{animation:in .35s ease both}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
+</style>
+
+<div class="app">
+  <aside class="rail" aria-label="Navegação">
+    <div class="logo"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="var(--brand)"/><path d="M17 26s-8-4.6-8-10.3A4.6 4.6 0 0 1 17 13a4.6 4.6 0 0 1 8 2.7C25 21.4 17 26 17 26Z" fill="var(--accent)"/><circle cx="17" cy="9" r="2.4" fill="var(--brand-ink)"/></svg><div><b>IFOMME</b><small>Ecossistema da caridade</small></div></div>
+    <div id="navD"></div>
+    <div class="spacer"></div>
+    <button class="nav" id="fontBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18 9 6l5 12M6 14h6M16 18l3-8 3 8M17 16h4"/></svg>Texto maior</button>
+    <div class="mini">Dados salvos no banco de dados</div>
+  </aside>
+
+  <main>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="mobilelogo"><svg width="28" height="28" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="var(--brand)"/><path d="M17 26s-8-4.6-8-10.3A4.6 4.6 0 0 1 17 13a4.6 4.6 0 0 1 8 2.7C25 21.4 17 26 17 26Z" fill="var(--accent)"/></svg>IFOMME</div>
+        <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" type="search" placeholder="Buscar ONG, causa, bairro ou item…" aria-label="Buscar"></label>
+        <button class="iconbtn" id="bell" type="button" aria-label="Notificações"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 0 0 4 0"/></svg><span class="dot" id="bellN" hidden>0</span></button>
+        <button class="iconbtn" data-go="conta" type="button" aria-label="Minha conta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+      </div>
+      <section id="view"></section>
+    </div>
+  </main>
+  <nav class="tabbar" id="navM" aria-label="Navegação"></nav>
+</div>
+<div id="layer"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const IC={
+ mural:'<path d="M4 5h16v14H4zM4 10h16M10 10v9"/>',
+ doar:'<path d="M12 21s-8-4.6-8-10.3A4.6 4.6 0 0 1 12 8a4.6 4.6 0 0 1 8 2.7C20 16.4 12 21 12 21Z"/>',
+ ongs:'<path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6"/>',
+ inspecao:'<path d="M9 12l2 2 4-4"/><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+ impacto:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+ conta:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ equipe:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0M17 5a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-4-6.3"/>',
+ minhaong:'<path d="M3 21V9l9-6 9 6v12H3zM9 21v-5h6v5M10.5 10.5h3M12 9v3"/>',
+ send:'<path d="M4 12 20 4l-6 16-3-7z"/>',
+ heart:'<path d="M12 20s-7-4.2-7-9.4A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 7 2.6C19 15.8 12 20 12 20Z"/>',
+ share:'<path d="M4 12v7h16v-7M12 3v12M7 8l5-5 5 5"/>',
+ gift:'<path d="M3 9h18v4H3zM5 13v8h14v-8M12 9v12M12 9S10 4 7.5 5 9 9 12 9Zm0 0s2-5 4.5-4S15 9 12 9Z"/>',
+ food:'<path d="M5 3v8a3 3 0 0 0 6 0V3M8 3v18M16 3c-2 2-2 7 0 9v9"/>',
+ shirt:'<path d="M8 3 3 6l2 4 3-1v12h8V9l3 1 2-4-5-3a4 4 0 0 1-8 0Z"/>',
+ cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
+ hands:'<circle cx="12" cy="7" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+ book:'<path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-5a3 3 0 0 0-3 3"/>',
+ pill:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-35 12 12)"/><path d="m9 8 6 8"/>',
+ sofa:'<path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3M2 11h20v6H2zM5 17v3M19 17v3"/>'
+};
+const svg=(k,cls='')=>`<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
+
+const ALLV={mural:"Mural de ações",doar:"Doar",ongs:"ONGs",chat:"Conversas",minhaong:"Minha ONG",inspecao:"Inspeção",impacto:"Meu impacto",equipe:"Equipe",conta:"Minha conta"};
+const SHORT={mural:"Mural",impacto:"Impacto",chat:"Chat",minhaong:"Minha ONG",conta:"Conta"};
+const TIPON={doador:"Doador",ong:"Representante de ONG",inspetor:"Inspetor",equipe:"Equipe IFOMME"};
+let PERF={},APR={},viewAs=null;
+function navFor(){const r=role();return r==="ong"?["mural","minhaong","chat","ongs"]:r==="inspetor"?["inspecao","ongs","mural"]:r==="equipe"?["mural","ongs","chat","inspecao","equipe"]:["mural","doar","ongs","chat","impacto"]}
+const CATS=[
+ {k:"alimentos",n:"Alimentos",d:"Cestas, não perecíveis, hortifruti",i:"food",u:"kg"},
+ {k:"roupas",n:"Roupas e calçados",d:"Agasalhos, infantil, cobertores",i:"shirt",u:"peças"},
+ {k:"dinheiro",n:"Dinheiro",d:"PIX direto para a ONG",i:"cash",u:"R$"},
+ {k:"voluntariado",n:"Voluntariado",d:"Horas do seu tempo",i:"hands",u:"horas"},
+ {k:"material",n:"Material escolar",d:"Cadernos, mochilas, livros",i:"book",u:"kits"},
+ {k:"higiene",n:"Higiene e saúde",d:"Fraldas, absorventes, kits",i:"pill",u:"kits"},
+ {k:"moveis",n:"Móveis e utensílios",d:"Camas, fogão, panelas",i:"sofa",u:"itens"}
+];
+const COLORS=["#E5132E","#F06A1D","#3A5BA0","#8A4FA3","#B9741A","#2F7F86","#5E6B2A"];
+
+let ONGS=[],POSTS=[],MINE=[];
+const BLANK={id:"",nome:"ONG removida",causa:"",bairro:"",cidade:"",km:0,status:"pendente",nota:0,benef:0,indic:0,aceita:[],needs:[],desc:"",insp:{}};
+const byId=id=>ONGS.find(o=>o.id===id)||BLANK;
+const hsh=t=>[...String(t)].reduce((a,c)=>a+c.charCodeAt(0),0);
+const newId=()=>"n"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function ago(ts){const m=Math.max(0,Math.round((Date.now()-(ts||0))/6e4));return m<1?"agora":m<60?`há ${m} min`:m<1440?`há ${Math.round(m/60)} h`:m<2880?"ontem":`há ${Math.round(m/1440)} dias`}
+
+const TIPOS={urgente:["Necessidade urgente","p-crit"],realizada:["Ação realizada","p-ok"],evento:["Evento","p-warn"],agradecimento:["Agradecimento","p-neutral"]};
+
+const ETAPAS=["Doação registrada","ONG confirmou","Coleta / entrega","Recebida","Impacto relatado"];
+const CHECKS=[
+ {k:"cnpj",t:"CNPJ ativo e compatível com a atividade",d:"Consulta na Receita Federal",w:15},
+ {k:"est",t:"Estatuto social e ata da diretoria",d:"Documentos registrados em cartório",w:10},
+ {k:"contas",t:"Prestação de contas do último ano",d:"Balanço ou relatório financeiro público",w:20},
+ {k:"visita",t:"Visita presencial realizada",d:"Endereço confere e atividade em funcionamento",w:25},
+ {k:"fotos",t:"Registro fotográfico do local",d:"Mínimo de 5 fotos com data",w:5},
+ {k:"sanit",t:"Condições higiênico-sanitárias para receber alimentos",d:"Armazenamento, refrigeração e manipulação adequados",w:10},
+ {k:"ref",t:"Duas referências da comunidade",d:"CRAS, escola, posto de saúde ou liderança local",w:10},
+ {k:"benef",t:"Lista de beneficiados confirmada",d:"Pessoas em vulnerabilidade ou risco alimentar, por amostragem e respeitando a LGPD",w:5}
+];
+let likes=new Set(), follows=new Set();
+let db=null,uid=null,ready=false;
+let state={view:"mural",filtro:"todos",causa:"todas",soVerif:false,q:"",wiz:{step:1,cat:null,q:"",desc:"",modo:"coleta",cep:"",pick:null},sel:null,msg:"",offline:false};
+
+function toast(m){const t=document.createElement("div");t.className="toast";t.setAttribute("role","status");t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function status(o){return (o.status==="verificado"?'<span class="pill p-ok">✓ Verificada</span>':o.status==="inspecao"?'<span class="pill p-warn">Em inspeção</span>':'<span class="pill p-neutral">Aguardando inspeção</span>')+(o.exemplo?' <span class="pill p-neutral">Exemplo</span>':"")}
+function av(o){return `<div class="avatar" style="background:${COLORS[hsh(o.id)%COLORS.length]}">${esc(o.nome.split(" ").filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join(""))}</div>`}
+const pct=(a,b)=>Math.min(100,Math.round(a/b*100));
+
+function renderNav(){
+  const nav=navFor(),uc=unreadThreads().length,b=(k,l)=>`<button class="nav" type="button" data-go="${k}" ${state.view===k?'aria-current="page"':''}>${svg(k)}<span>${l}</span>${k==="chat"&&uc?`<span class="dot num">${uc}</span>`:""}</button>`;
+  $("#navD").innerHTML=[...nav,"conta"].map(k=>b(k,ALLV[k])).join("");
+  $("#navM").innerHTML=nav.map(k=>b(k,SHORT[k]||ALLV[k])).join("");
+  const n=events().filter(e=>e.ts>SEEN.n).length; $("#bellN").textContent=n; $("#bellN").hidden=!n;
+}
+function go(v){if(location.hash!=="#"+v)location.hash=v;else route()}
+function route(){render();window.scrollTo(0,0)}
+function pickView(){const nav=navFor(),h=location.hash.slice(1);state.view=nav.includes(h)||h==="conta"?h:nav[0]}
+/* ---------- perfis ---------- */
+const myReq=()=>PERF[meKey()]||null;
+function okRole(u){const p=PERF[u],a=APR[u];return !!p&&!!a&&a.tipo===p.tipo&&(p.tipo!=="ong"||a.ong===p.ong)}
+function role(){if(isAdmin)return viewAs||"equipe";const p=myReq();if(!p||p.tipo==="doador")return "doador";return okRole(meKey())?p.tipo:"doador"}
+function pending(){const p=myReq();return !isAdmin&&!!p&&p.tipo!=="doador"&&role()==="doador"}
+function myOng(){if(isAdmin)return state.asOng&&byId(state.asOng).id?state.asOng:(ONGS[0]?ONGS[0].id:null);const p=myReq();return p?p.ong:null}
+function setPerfil(tipo,ong){const me=meKey(),body={tipo,ong:ong||null,ts:Date.now()},liv=!!db&&!!uid;PERF={...PERF,[me]:body};
+ if(liv)W(db.doc("perfis/"+me).set(body));else APR={...APR,[me]:body};
+ toast(tipo==="doador"?"Perfil de doador ativado":liv?"Pedido enviado. A equipe IFOMME precisa aprovar seu acesso.":"Perfil ativado nesta visualização");render()}
+const choices=()=>`<div class="cats"><button class="cat" data-setrole="doador">${svg("gift")}<b>Quero doar</b><span>Encontrar instituições, doar e acompanhar o impacto</span></button><button class="cat" data-open="rep">${svg("minhaong")}<b>Represento uma ONG</b><span>Publicar ações, pedir doações e atender doadores</span></button><button class="cat" data-setrole="inspetor">${svg("inspecao")}<b>Sou inspetor</b><span>Verificar instituições e conceder o selo</span></button></div>`;
+function onb(){if(isAdmin||myReq()||!state.pfReady||state.view==="conta")return "";return `<div class="panel" style="display:flex;flex-direction:column;gap:12px"><h2 style="font-size:20px">Como você vai usar o IFOMME?</h2>${choices()}</div>`}
+function formRep(){drawer(`<h2 style="font-size:22px">Represento uma ONG</h2><p class="muted" style="margin:0">Escolha a sua instituição. A equipe IFOMME confirma o vínculo antes de liberar o painel da ONG.</p>
+ ${ONGS.length?`<div class="field"><label for="repOng">Instituição</label><select id="repOng">${ONGS.map(o=>`<option value="${o.id}">${esc(o.nome)}</option>`).join("")}</select></div><button class="btn" id="repOk" type="button">Solicitar acesso</button><div class="label">ou</div>`:""}
+ <button class="btn ghost" data-open="cadastrar" type="button">Cadastrar uma nova ONG</button>`);
+ const b=$("#repOk");b&&b.addEventListener("click",()=>{const v=$("#repOng").value;closeLayer();setPerfil("ong",v)})}
+function vConta(){
+ if(isAdmin){const cur=viewAs||"equipe";return `<div class="head"><div><h1>Minha conta</h1><p>Você faz parte da equipe IFOMME e pode ver o app como cada perfil.</p></div><span class="pill p-ok">Equipe IFOMME</span></div>
+  <div class="panel" style="display:flex;flex-direction:column;gap:12px"><span class="label">Ver o app como</span><div class="chips">${["equipe","doador","ong","inspetor"].map(k=>`<button class="chip" data-viewas="${k}" aria-pressed="${cur===k}">${TIPON[k]}</button>`).join("")}</div>
+  ${cur==="ong"?`<div class="field" style="max-width:340px"><label for="asOng">Instituição</label><select id="asOng">${ONGS.map(o=>`<option value="${o.id}" ${o.id===myOng()?"selected":""}>${esc(o.nome)}</option>`).join("")}</select></div>`:""}</div>`}
+ const p=myReq(),t=p?p.tipo:null;
+ return `<div class="head"><div><h1>Minha conta</h1><p>${p?"Seu perfil define quais áreas do app você usa.":"Escolha um perfil para começar."}</p></div>${p?(pending()?'<span class="pill p-warn">Aguardando aprovação</span>':'<span class="pill p-ok">Ativo</span>'):""}</div>
+ ${p?`<div class="panel"><span class="label">Perfil atual</span><div style="font-family:var(--display);font-weight:800;font-size:20px;margin-top:4px">${TIPON[t]||"Doador"}${t==="ong"&&byId(p.ong).id?" · "+esc(byId(p.ong).nome):""}</div>${pending()?'<p class="muted" style="margin:6px 0 0">Enquanto a equipe analisa o pedido, você usa o app como doador.</p>':""}</div>`:""}
+ <div class="panel" style="display:flex;flex-direction:column;gap:12px"><span class="label">${p?"Trocar de perfil":"Perfis"}</span>${choices()}</div>`}
+function vEquipe(){
+ const reqs=Object.keys(PERF).filter(u=>PERF[u]&&PERF[u].tipo&&PERF[u].tipo!=="doador").sort((a,b)=>(PERF[b].ts||0)-(PERF[a].ts||0)),pend=reqs.filter(u=>!okRole(u)).length;
+ return `<div class="head"><div><h1>Equipe</h1><p>Aprove quem pode representar uma instituição ou atuar como inspetor.</p></div></div>
+ <div class="stats"><div class="stat"><span class="label">Pedidos pendentes</span><div class="big num">${pend}</div></div><div class="stat"><span class="label">Pessoas com perfil</span><div class="big num">${Object.keys(PERF).length}</div></div><div class="stat"><span class="label">ONGs</span><div class="big num">${ONGS.length}</div></div><div class="stat"><span class="label">Verificadas</span><div class="big num">${ONGS.filter(o=>o.status==="verificado").length}</div></div></div>
+ <div class="panel"><h3 style="font-size:17px;margin-bottom:6px">Pedidos de acesso</h3>${reqs.map(u=>{const q=PERF[u],ok=okRole(u);return `<div class="check" style="align-items:center;flex-wrap:wrap"><div style="min-width:0;flex:1"><b>${esc(pname(u))}</b><div class="muted" style="font-size:13px">${TIPON[q.tipo]||esc(q.tipo)}${q.tipo==="ong"?" · "+esc(byId(q.ong).nome):""}</div></div>${ok?'<span class="pill p-ok">Aprovado</span>':'<span class="pill p-warn">Pendente</span>'}${ok?`<button class="btn sm ghost" data-rev="${esc(u)}">Revogar</button>`:`<button class="btn sm" data-apr="${esc(u)}">Aprovar</button>`}</div>`}).join("")||'<p class="muted" style="margin:6px 0 0">Nenhum pedido ainda. Quando alguém escolher o perfil de ONG ou inspetor, o pedido aparece aqui.</p>'}</div>${donsPanel(null)}${exPanel()}`}
+function updNeeds(o,fn){const needs=o.needs.map(x=>({...x}));fn(needs);store.update("ongs",o.id,{needs});render()}
+function vMinha(){const o=byId(myOng());if(!o.id)return `<div class="head"><div><h1>Minha ONG</h1><p>Nenhuma instituição vinculada ao seu perfil ainda.</p></div></div>`;
+ const sc=inspScore(o.id)||o.nota,conv=threadList("ong").filter(t=>t.ong===o.id).length;
+ return `<div class="head"><div><h1>${esc(o.nome)}</h1><p>${esc(o.causa)} · ${esc(o.bairro)}, ${esc(o.cidade)}</p></div><div>${status(o)}</div></div>
+ ${o.pendDoc?`<div class="legal"><b>A inspeção pediu documentos</b><span>Envie à equipe IFOMME os documentos que faltam (CNPJ, estatuto, prestação de contas) e combine a visita pelo chat. <button class="lk" type="button" data-docok="${o.id}">Já enviei</button></span></div>`:""}
+ <div class="stats"><div class="stat"><span class="label">Inspeção</span><div class="big num">${sc}<span class="muted" style="font-size:15px">/100</span></div></div><div class="stat"><span class="label">Conversas</span><div class="big num">${conv}</div></div><div class="stat"><span class="label">Publicações</span><div class="big num">${POSTS.filter(p=>p.ong===o.id).length}</div></div><div class="stat"><span class="label">Indicações</span><div class="big num">${o.indic||0}</div></div></div>
+ <div class="panel"><h3 style="font-size:17px;margin-bottom:4px">Necessidades</h3><p class="muted" style="margin:0 0 6px;font-size:13px">É o que os doadores veem no mural e na busca. Atualize a quantidade recebida sempre que chegar algo.</p>
+ ${o.needs.map((n,i)=>`<div class="need"><div class="t"><b>${esc(n.i)} ${n.urg?'<span class="pill p-crit">urgente</span>':""}</b><span class="muted">${esc((CATS.find(c=>c.k===n.c)||{n:""}).n)}</span></div><div class="bar ${n.urg?"urg":""}"><i style="width:${pct(n.q,n.m)}%"></i></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px"><label for="nq${i}">Recebido</label><input class="inp num" id="nq${i}" type="number" min="0" data-needset="${i}" value="${n.q}" style="width:90px;padding:6px 10px"><span class="muted num">de ${n.m}</span><button class="act" data-needurg="${i}">${n.urg?"Tirar urgência":"Marcar urgente"}</button><button class="act" data-needdel="${i}" style="margin-left:auto">Remover</button></div></div>`).join("")}
+ <form id="fNeed" class="form" style="margin-top:14px;align-items:end"><div class="field"><label for="ni">Novo item</label><input class="inp" id="ni" required placeholder="Ex.: Leite em pó"></div><div class="field"><label for="nc">Categoria</label><select id="nc">${CATS.map(c=>`<option value="${c.k}">${c.n}</option>`).join("")}</select></div><div class="field"><label for="nm">Meta</label><input class="inp" id="nm" type="number" min="1" required placeholder="100"></div><button class="btn" type="submit">Adicionar</button></form></div>
+ <div class="legal"><b>Ao receber alimentos</b><span>Como intermediária, a instituição só responde por danos se houver dolo, e a responsabilidade dela termina na primeira entrega ao beneficiário final. Os alimentos devem ir, de graça, a pessoas em situação de vulnerabilidade ou risco alimentar. Recuse restos já servidos e produtos vencidos. <button class="lk" type="button" data-open="regras">Ver as regras</button></span></div>
+${donsPanel(o.id)}
+ <div class="panel" style="display:flex;flex-direction:column;gap:14px"><h3 style="font-size:17px">Dados da instituição</h3>
+ <div class="field"><label for="mDesc">Sobre a instituição</label><textarea class="inp" id="mDesc" rows="3" maxlength="600">${esc(o.desc||"")}</textarea></div>
+ <div class="form"><div class="field"><label for="mHor">Horário de recebimento</label><input class="inp" id="mHor" maxlength="80" value="${esc(o.horario||"")}" placeholder="Ex.: seg. a sex., 9h às 17h"></div><div class="field"><label for="mPix">Chave PIX (opcional)</label><input class="inp" id="mPix" maxlength="80" value="${esc(o.pix||"")}" placeholder="CNPJ, e-mail ou telefone"></div></div>
+ <div><span class="label">Aceita doações de</span><div class="chips" style="margin-top:8px">${CATS.map(c=>`<label class="chip"><input type="checkbox" data-acc="${c.k}" ${o.aceita.includes(c.k)?"checked":""}> ${c.n}</label>`).join("")}</div></div>
+ <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="mCol" ${o.coleta?"checked":""}> Fazemos coleta no endereço do doador</label>
+ <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-savedesc="${o.id}">Salvar dados</button><button class="btn ghost" data-go="mural">Publicar no mural</button><button class="btn ghost" data-go="chat">Atender doadores</button></div></div>`}
+function render(){pickView();MINE=allDon().filter(d=>d.u===meKey()).concat(LEG).sort((a,b)=>(a.ts||0)-(b.ts||0));const b=(pending()?`<div class="sample" role="status">Seu pedido de acesso como ${TIPON[myReq().tipo]||"perfil"} aguarda aprovação da equipe. Enquanto isso, você usa o app como doador.</div>`:"")+(state.offline?'<div class="sample" role="status">Banco de dados indisponível nesta visualização. O que você fizer aqui não será salvo.</div>':state.msg?`<div class="sample" role="status">${esc(state.msg)}</div>`:"");
+ $("#view").innerHTML=b+(ready?onb()+({mural:vMural,doar:vDoar,ongs:vOngs,chat:vChat,inspecao:vInsp,impacto:vImp,minhaong:vMinha,equipe:vEquipe,conta:vConta})[state.view]():'<div class="panel muted">Carregando dados do IFOMME…</div>');renderNav();chatBottom()}
+function soft(){saveWiz();const a=document.activeElement,aid=a&&a.id,keep={};["cText","obs","cOng","cTipo","chatIn","mDesc","mHor","mPix","ni","nm","nc","repOng",...[...document.querySelectorAll("[id^=nt_]")].map(e=>e.id)].forEach(k=>{const e=document.getElementById(k);if(e)keep[k]=e.value});render();for(const k in keep){const e=document.getElementById(k);if(e&&keep[k])e.value=keep[k]}if(aid&&aid!=="q"){const e=document.getElementById(aid);e&&e.focus()}}
+function chatBottom(){const m=document.getElementById("msgs");if(m)m.scrollTop=m.scrollHeight}
+/* ---------- banco de dados ---------- */
+function W(p){return p.then(()=>true,e=>{toast(e&&e.code==="quota_exceeded"?"O banco de dados está cheio.":"Não foi possível salvar. Verifique sua permissão de acesso.");return false})}
+const arr=col=>col==="ongs"?ONGS:col==="posts"?POSTS:MINE;
+const store={
+ live(col){return !!db&&(col!=="me"||!!uid)},
+ ref(col,id){return (col==="me"?db.collection("data/users/"+uid):db.collection(col)).doc(id)},
+ set(col,id,data){if(this.live(col))return W(this.ref(col,id).set(data));if(id==="prefs")return;const a=arr(col),i=a.findIndex(x=>x.id===id),v={...data,id};i<0?a.push(v):a[i]=v},
+ update(col,id,data){if(this.live(col))return W(this.ref(col,id).update(data));const x=arr(col).find(x=>x.id===id);x&&Object.assign(x,data)},
+ del(col,id){if(this.live(col))return W(this.ref(col,id).delete());const a=arr(col),i=a.findIndex(x=>x.id===id);i>=0&&a.splice(i,1)}
+};
+function savePrefs(){store.set("me","prefs",{kind:"prefs",likes:[...likes],follows:[...follows],quem:state.quem||null,local:state.local||"",indic:[...myInd],rsvp:[...rsvp]})}
+function norm(d){const v={...BLANK,...d.data(),id:d.id};if(!Array.isArray(v.aceita)||!v.aceita.length)v.aceita=["alimentos"];if(!Array.isArray(v.needs)||!v.needs.length)v.needs=[{i:"Necessidades a confirmar",c:v.aceita[0],q:0,m:1}];v.km=+v.km||0;v.insp=v.insp||{};v.coleta=v.coleta!=null?!!v.coleta:!!(v.exemplo&&v.km>0&&v.km<10);return v}
+async function boot(){
+ const timer=setTimeout(()=>{if(!ready||!state.fresh){state.msg="Ainda não foi possível acessar o banco de dados. Continuamos tentando.";soft()}},10000);
+ let user=null;
+ try{db=window.claude&&window.claude.use?await window.claude.use("db"):null;user=db?await window.claude.use("user"):null;uid=user?await user.id():null}catch(_){db=null}
+ if(!db){clearTimeout(timer);ready=true;state.offline=true;state.pfReady=true;render();return}
+ try{isAdmin=!!(user&&await user.canEdit());U=user}catch(_){}
+ let wait=0;const got={},map=s=>{const n={};s.docs.forEach(d=>n[d.id]=d.data());return n};
+ const sub=(k,ref,fn,must)=>{wait++;const done=()=>{if(!got[k]){got[k]=1;if(--wait===0){ready=true;state.pfReady=true}}};
+  ref.onSnapshot(s=>{fn(s);done();if(!s.metadata.fromCache){state.fresh=true;clearTimeout(timer);state.msg=""}soft()},()=>{done();if(must){clearTimeout(timer);state.msg="O banco de dados ficou indisponível nesta visita."}soft()})};
+ sub("o",db.collection("ongs"),s=>{ONGS=s.docs.map(norm)},1);
+ sub("p",db.collection("posts"),s=>{POSTS=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.ts||0)-(a.ts||0))},1);
+ sub("pf",db.collection("perfis"),s=>{PERF=map(s);names()});
+ sub("ap",db.collection("aprov"),s=>{APR=map(s)});
+ if(uid){
+  sub("c",db.collection("chats"),s=>{CH=map(s);Object.keys(CH).forEach(k=>known.add(k));names()});
+  sub("d",db.collection("doacoes"),s=>{MAPS={...MAPS,doacoes:map(s)};Object.keys(MAPS.doacoes).forEach(k=>known.add("doacoes/"+k));names()});
+  sub("r",db.collection("receb"),s=>{MAPS={...MAPS,receb:map(s)};Object.keys(MAPS.receb).forEach(k=>known.add("receb/"+k))});
+  sub("me",db.collection("data/users/"+uid),s=>{LEG=[];s.docs.forEach(d=>{const v=d.data();if(d.id==="prefs"){likes=new Set(v.likes||[]);follows=new Set(v.follows||[]);myInd=new Set(v.indic||[]);rsvp=new Set(v.rsvp||[]);if(v.quem)state.quem=v.quem;state.local=v.local||""}else if(v.kind==="doacao")LEG.push({...v,id:d.id,u:uid,legacy:true})})});
+ }
+}
+/* ---------- doações compartilhadas, avisos e não lidas ---------- */
+let MAPS={doacoes:{},receb:{}},LEG=[],myInd=new Set(),rsvp=new Set();
+let SEEN={n:0,t:{}};try{const v=JSON.parse(localStorage.getItem("ifomme-seen")||"{}");SEEN={n:+v.n||0,t:v.t&&typeof v.t==="object"?v.t:{}}}catch(_){}
+const saveSeen=()=>{try{localStorage.setItem("ifomme-seen",JSON.stringify(SEEN))}catch(_){}};
+const MODO={coleta:"Coleta em casa",entrega:"Doador leva até a instituição",ponto:"Ponto de coleta"};
+const NEXT=["Confirmar doação","Coleta ou entrega combinada","Marcar como recebida","Relatar impacto"];
+const sameB=o=>state.local&&String(o.bairro||"").toLowerCase().trim()===state.local.toLowerCase().trim()?1:0;
+const near=(a,b)=>(sameB(b)-sameB(a))||((a.km||99)-(b.km||99));
+const dist=o=>o.km?o.km.toFixed(1).replace(".",",")+" km":esc(o.bairro);
+function putMap(col,docId,field,key,val){const cur=MAPS[col][docId]||{};MAPS={...MAPS,[col]:{...MAPS[col],[docId]:{...cur,[field]:{...(cur[field]||{}),[key]:val}}}};
+ if(db&&uid){const k=col+"/"+docId,create=!known.has(k);known.add(k);const body={[field]:{[key]:val}};wq[k]=(wq[k]||Promise.resolve()).then(()=>W(create?db.doc(k).set(body):db.doc(k).update(body)))}}
+function recOk(r,ong){const a=APR[r];return (!!a&&(a.tipo==="equipe"||(a.tipo==="ong"&&a.ong===ong)))||(r===meKey()&&(isAdmin||!db))}
+function allDon(){const out=[];for(const u in MAPS.doacoes){const it=(MAPS.doacoes[u]||{}).items||{};for(const id in it){const d=it[id];if(!d||typeof d!=="object")continue;let e=0,nota="",ets=0;const k=u+"|"+id;
+  for(const r in MAPS.receb){const x=((MAPS.receb[r]||{}).st||{})[k];if(x&&recOk(r,d.ong)&&(+x.e||0)>=e){e=Math.min(4,+x.e||0);nota=String(x.nota||nota);ets=+x.ts||0}}
+  out.push({...d,id,u,q:+d.q||1,desc:String(d.desc||""),ts:+d.ts||0,etapa:e,nota,ets})}}return out}
+function teamMark(){const me=meKey();if(db&&uid&&isAdmin&&!APR[me]){APR={...APR,[me]:{tipo:"equipe"}};W(db.doc("aprov/"+me).set({tipo:"equipe",ts:Date.now()}))}}
+function stepDon(u,id){const d=allDon().find(x=>x.u===u&&x.id===id);if(!d||d.etapa>=4)return;const e=d.etapa+1;let nota="";
+ if(e===4){const i=document.getElementById("nt_"+id);nota=i?i.value.trim().slice(0,300):"";if(!nota){toast("Escreva um breve relato do impacto");i&&i.focus();return}}
+ teamMark();putMap("receb",meKey(),"st",u+"|"+id,{e,ts:Date.now(),nota});
+ if(e===3){const o=byId(d.ong);if(o.id){const needs=o.needs.map(x=>({...x})),n=needs.find(x=>x.c===d.cat);if(n){n.q=Math.min(n.m,n.q+d.q);store.update("ongs",o.id,{needs})}}}
+ toast(ETAPAS[e]);render()}
+function donsPanel(ongId){const dons=allDon().filter(d=>(ongId?d.ong===ongId:true)&&byId(d.ong).id).sort((a,b)=>b.ts-a.ts);
+ return `<div class="panel"><h3 style="font-size:17px;margin-bottom:4px">${ongId?"Doações para a instituição":"Doações em andamento"}</h3><p class="muted" style="margin:0 0 6px;font-size:13px">Cada etapa confirmada aqui aparece no rastreio do doador. Ao marcar como recebida, a necessidade correspondente é atualizada.</p>
+ ${dons.map(d=>`<div class="need"><div class="t"><b>${esc(d.desc)}</b><span class="pill ${d.etapa>=3?"p-ok":d.etapa?"p-warn":"p-crit"}">${ETAPAS[d.etapa]}</span></div>
+  <div class="muted" style="font-size:13px">${ongId?"":esc(byId(d.ong).nome)+" · "}${esc(pname(d.u))} · ${MODO[d.modo]||""} · ${ago(d.ts)}${d.cat==="alimentos"?" · "+esc(d.quem||"Pessoa física")+" · validade "+esc(String(d.val||"").split("-").reverse().join("/")):""}</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">${d.etapa===3?`<input class="inp" id="nt_${d.id}" maxlength="300" placeholder="Ex.: as cestas foram entregues a 12 famílias" style="flex:1;min-width:180px" aria-label="Relato do impacto">`:""}${d.etapa<4?`<button class="btn sm" data-step="${esc(d.u)}|${d.id}">${NEXT[d.etapa]}</button>`:`<span class="muted" style="font-size:13px">Relato: ${esc(d.nota)}</span>`}${d.u!==meKey()?`<button class="act" data-talk="${esc(d.u)}|${d.ong}">Conversar com o doador</button>`:""}</div></div>`).join("")||'<p class="muted" style="margin:6px 0 0">Nenhuma doação registrada ainda. Quando um doador escolher a instituição, a doação aparece aqui para confirmação.</p>'}</div>`}
+function unreadThreads(){const r=role(),me=meKey(),out=[];const add=(mode,side)=>threadList(mode).forEach(t=>{if(mode==="ong"&&t.u===me)return;const l=t.msgs[t.msgs.length-1];if(l.f!==side&&l.ts>(SEEN.t[mode+t.u+"|"+t.ong]||0))out.push({...t,mode,l})});
+ if(r==="ong")add("ong","o");else{add("me","u");if(r==="equipe")add("ong","o")}return out}
+function events(){if(!ready)return [];const ev=[],r=role(),me=meKey();
+ MINE.forEach(d=>{if(d.etapa>0&&d.ets)ev.push({t:byId(d.ong).nome+": "+ETAPAS[d.etapa].toLowerCase()+" ("+d.desc+")",ts:d.ets,go:"impacto"})});
+ unreadThreads().forEach(t=>ev.push({t:"Nova mensagem de "+(t.mode==="ong"?pname(t.u)+" para "+byId(t.ong).nome:byId(t.ong).nome),ts:t.l.ts,go:"chat",chat:{mode:t.mode,u:t.u,ong:t.ong}}));
+ if(r==="ong"||r==="equipe")allDon().forEach(d=>{if(d.etapa===0&&d.u!==me&&byId(d.ong).id&&(r==="equipe"||d.ong===myOng()))ev.push({t:"Nova doação para "+byId(d.ong).nome+": "+d.desc,ts:d.ts,go:r==="ong"?"minhaong":"equipe"})});
+ if(r==="equipe")Object.keys(PERF).forEach(u=>{const q=PERF[u];if(q&&q.tipo&&q.tipo!=="doador"&&!okRole(u))ev.push({t:"Pedido de acesso: "+pname(u)+" como "+(TIPON[q.tipo]||q.tipo),ts:+q.ts||0,go:"equipe"})});
+ return ev.sort((a,b)=>b.ts-a.ts).slice(0,20)}
+function impCard(){if(!navFor().includes("impacto"))return "";const n=MINE.length;return `<div class="panel impact"><span class="label">Sua ponte até agora</span>${n?`<div class="big num" style="margin-top:8px">${n} ${n===1?"doação":"doações"}</div><p style="margin:6px 0 12px;opacity:.9">ajudaram cerca de ${MINE.reduce((s,d)=>s+impacto(d),0)} pessoas (estimativa).</p><button class="btn sm ghost" data-go="impacto">Acompanhar entregas</button>`:`<p style="margin:8px 0 12px;font-family:var(--display);font-weight:800;font-size:19px;line-height:1.2">Faça sua primeira doação e acompanhe cada etapa.</p><button class="btn sm ghost" data-go="doar">Quero doar</button>`}</div>`}
+function canDel(p){const r=role();return r==="equipe"||(r==="ong"&&p.ong===myOng())}
+function exPanel(){const n=ONGS.filter(o=>o.exemplo).length+POSTS.filter(p=>p.exemplo).length;if(!n)return "";return `<div class="panel"><h3 style="font-size:17px;margin-bottom:4px">Dados de exemplo</h3><p class="muted" style="margin:0 0 12px;font-size:13.5px">Há ${n} registros fictícios de demonstração (instituições e publicações marcadas como Exemplo). Apague antes de cadastrar instituições reais.</p><button class="btn ghost" data-purge="1">${state.purge?"Confirmar: apagar os "+n+" registros":"Apagar dados de exemplo"}</button></div>`}
+function formLocal(){drawer(`<h2 style="font-size:22px">Onde você está?</h2><p class="muted" style="margin:0">Usamos o bairro para mostrar primeiro as instituições mais próximas de você.</p><form id="fLoc" style="display:flex;flex-direction:column;gap:12px"><div class="field"><label for="lb">Bairro</label><input class="inp" id="lb" value="${esc(state.local||"")}" placeholder="Ex.: Capão Redondo" maxlength="60"></div><button class="btn" type="submit">Salvar</button></form>`);
+ $("#fLoc").addEventListener("submit",e=>{e.preventDefault();state.local=$("#lb").value.trim();savePrefs();closeLayer();toast(state.local?"Bairro salvo":"Bairro removido");render()})}
+
+/* ---------- MURAL ---------- */
+function vMural(){
+  const q=state.q.toLowerCase();
+  let ps=POSTS.filter(p=>ONGS.some(o=>o.id===p.ong)).filter(p=>state.filtro==="todos"||p.tipo===state.filtro||(state.filtro==="seguindo"&&follows.has(p.ong)));
+  if(q)ps=ps.filter(p=>(p.t+byId(p.ong).nome+byId(p.ong).bairro).toLowerCase().includes(q));
+  const urg=ONGS.flatMap(o=>o.needs.filter(n=>n.urg).map(n=>({o,n}))).sort((a,b)=>near(a.o,b.o));
+  const tot=MINE.length;
+  const perto=ONGS.slice().sort(near),rl=role(),canPost=rl==="ong"||rl==="equipe",postOngs=rl==="ong"?ONGS.filter(o=>o.id===myOng()):ONGS;
+  return `<button class="addr" type="button" data-open="local"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>${state.local?`Doando a partir de <b>${esc(state.local)}</b>`:"<b>Informe seu bairro</b> para ver quem está perto"} ▾</button>
+  <div class="rowscroll" aria-label="Categorias de doação">${CATS.map(c=>`<button class="circ" type="button" data-catgo="${c.k}"><span class="c">${svg(c.i)}</span>${c.n.split(" ")[0]}</button>`).join("")}</div>
+  <div class="rowscroll" aria-label="Campanhas">
+   <button class="banner" data-catgo="roupas" style="background:#E5132E"><i></i><i></i><b>Doe agasalhos</b><span>Cobertores e roupas de frio em bom estado para quem mais precisa.</span></button>
+   <button class="banner" data-catgo="alimentos" style="background:#6E2BB8"><i></i><i></i><b>Alimento não é lixo</b><span>Doe excedentes dentro da validade, com segurança jurídica.</span></button>
+   <button class="banner" data-catgo="voluntariado" style="background:#0B8A7A"><i></i><i></i><b>Doe 2 horas</b><span>Seja voluntário em uma instituição perto de você.</span></button>
+  </div>
+  <div class="sec"><h2>ONGs perto de você</h2><button data-go="ongs">Ver todas</button></div>
+  <div class="lojas">${perto.slice(0,6).map(loja).join("")||'<div class="panel muted">Nenhuma ONG cadastrada ainda. Cadastre a primeira na aba ONGs e ela aparece aqui.</div>'}</div>
+  <div class="sec"><h2>Mural de ações</h2><button data-go="doar">Quero doar</button></div>
+  <div class="muralgrid"><div class="feed">
+   ${canPost?`<div class="panel composer"><span class="label">Publicar no mural</span>
+    <textarea id="cText" placeholder="Conte uma ação realizada, peça ajuda ou divulgue um evento…" style="margin-top:8px"></textarea>
+    <div class="row"><select id="cOng" aria-label="Publicar como">${postOngs.map(o=>`<option value="${o.id}">${esc(o.nome)}</option>`).join("")}</select>
+    <select id="cTipo" aria-label="Tipo">${Object.entries(TIPOS).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join("")}</select>
+    <button class="btn sm" id="cPub" style="margin-left:auto">Publicar</button></div></div>`:""}
+   <div class="chips" role="group" aria-label="Filtrar mural">${[["todos","Tudo"],["urgente","Urgentes"],["realizada","Ações realizadas"],["evento","Eventos"],["agradecimento","Agradecimentos"],["seguindo","ONGs que sigo"]].map(([k,n])=>`<button class="chip" data-f="${k}" aria-pressed="${state.filtro===k}">${n}</button>`).join("")}</div>
+   ${ps.length?ps.map(post).join(""):`<div class="panel muted">Nenhuma publicação com esse filtro. Tente “Tudo”.</div>`}
+  </div>
+  <aside class="side">
+   ${impCard()}
+   <div class="panel"><h3>Urgente perto de você</h3>${urg.map(({o,n})=>`<div class="need"><div class="t"><b>${esc(n.i)}</b><span class="muted num">${dist(o)}</span></div><div class="bar urg"><i style="width:${pct(n.q,n.m)}%"></i></div><div class="t"><span class="muted">${esc(o.nome)}</span><button class="act" data-quick="${o.id}|${n.c}" style="padding:2px 6px">Doar</button></div></div>`).join("")}</div>
+  </aside></div>`;
+}
+function loja(o){const urg=o.needs.some(n=>n.urg),bits=[o.status==="verificado"?`<span class="free">✓ Inspeção ${inspScore(o.id)||o.nota}/100</span>`:o.status==="inspecao"?"Em inspeção":"Aguardando inspeção",o.coleta?"Faz coleta":"",urg?'<span style="color:var(--brand);font-weight:700">Precisa urgente</span>':""].filter(Boolean);
+ return `<button class="loja" type="button" data-ong="${o.id}">${av(o)}<div style="min-width:0"><div class="nm">${esc(o.nome)}${o.exemplo?' <span class="pill p-neutral">Exemplo</span>':""}</div><div class="mt">${esc(o.causa)} · ${dist(o)}</div><div class="mt mt2">${bits.map(b=>`<span>${b}</span>`).join("")}</div></div></button>`}
+function post(p){
+  const o=byId(p.ong),[tn,tc]=TIPOS[p.tipo],n=p.need!=null?o.needs[p.need]:null,on=likes.has(p.id);
+  return `<article class="post ${p.tipo==="urgente"?"urgent":""}">
+   <div class="phead">${av(o)}<div class="who"><b><a href="#ongs" data-ong="${o.id}" style="color:inherit">${esc(o.nome)}</a> ${status(o)}</b><span>${esc(o.bairro)} · ${ago(p.ts)}</span></div><span class="pill ${tc}">${tn}</span></div>
+   <p>${esc(p.t)}</p>
+   ${n?`<div><div class="t" style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(n.i)}</span><span class="num muted">${n.q} de ${n.m}</span></div><div class="bar urg" style="margin-top:6px"><i style="width:${pct(n.q,n.m)}%"></i></div></div>`:""}
+   ${p.ev?`<div class="sample">📅 ${esc(p.ev)}</div>`:""}
+   <div class="actions">
+    <button class="act ${on?"on":""}" data-like="${p.id}" aria-pressed="${on}">${svg("heart")}<span class="num">${p.ap+(on?1:0)}</span> Apoiar</button>
+    ${p.tipo==="urgente"?`<button class="act" data-quick="${o.id}|${n?n.c:o.aceita[0]}">${svg("gift")}Doar para isso</button>`:""}
+    ${p.ev?`<button class="act ${rsvp.has(p.id)?"on":""}" data-rsvp="${p.id}" aria-pressed="${rsvp.has(p.id)}">${svg("hands")}${rsvp.has(p.id)?"Presença confirmada":"Vou participar"}</button>`:""}
+    <button class="act" data-share="${p.id}">${svg("share")}Compartilhar</button>
+    ${canDel(p)?`<button class="act" data-delpost="${p.id}" style="margin-left:auto">${state.delPost===p.id?"Confirmar exclusão":"Excluir"}</button>`:""}
+   </div></article>`;
+}
+
+/* ---------- regras de doação de alimentos (Leis 14.016/2020 e 15.224/2025) ---------- */
+const QUEM=["Pessoa física","Supermercado","Restaurante","Bar","Padaria","Lanchonete","Hospital","Cooperativa","Indústria alimentícia","Outro estabelecimento que produz ou fornece alimentos"];
+const ATIPO=[["natura","In natura (frutas, legumes, verduras)"],["indust","Industrializado"],["pronta","Refeição pronta ou preparada"]];
+const DECL=["Os alimentos estão dentro do prazo de validade e foram conservados conforme as orientações do fabricante.","A integridade e a segurança sanitária estão preservadas, mesmo que a embalagem ou a aparência tenham algum dano.","Não são restos: nunca foram servidos nem manipulados por consumidor final.","A doação é gratuita, sem nenhuma cobrança de quem recebe."];
+const hoje=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const LEIS=`<a href="https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/l15224.htm" target="_blank" rel="noopener">Lei 15.224/2025</a>`;
+function foodForm(w){const dc=w.decl||[];return `<div class="legal"><b>Doação de alimentos</b><span>Pode doar: alimentos in natura, industrializados ou preparados, excedentes não vendidos ou sobras seguras para consumo. Não pode: restos já servidos ou manipulados pelo consumidor, nem produtos vencidos ou impróprios. <button class="lk" type="button" data-open="regras">Ver as regras</button></span></div>
+ <div class="form"><div class="field"><label for="wquem">Quem está doando</label><select id="wquem">${QUEM.map(q=>`<option ${q===(w.quem||state.quem||QUEM[0])?"selected":""}>${q}</option>`).join("")}</select></div>
+ <div class="field"><label for="watipo">Tipo de alimento</label><select id="watipo">${ATIPO.map(a=>`<option value="${a[0]}" ${a[0]===(w.atipo||"indust")?"selected":""}>${a[1]}</option>`).join("")}</select></div>
+ <div class="field"><label for="wval">Validade (ou consumir até)</label><input class="inp" id="wval" type="date" min="${hoje()}" value="${esc(w.val||"")}"></div></div>
+ <div><span class="label">Declaração do doador (obrigatória)</span>${DECL.map((t,i)=>`<label class="check"><input type="checkbox" id="wd${i}" ${dc[i]?"checked":""}><div>${t}</div></label>`).join("")}</div>`}
+const TERMO=`<div class="legal"><b>Segurança jurídica do doador</b><span>Sua responsabilidade termina na primeira entrega dos alimentos à instituição ou ao beneficiário final. Doador e instituição só respondem por danos se houver dolo. A doação é gratuita e não configura relação de consumo. Base: ${LEIS}.</span></div>`;
+function formRegras(){const b=(t,l)=>`<div><span class="label">${t}</span><ul class="rules">${l.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+ drawer(`<h2 style="font-size:22px">Regras para doar alimentos</h2><p class="muted" style="margin:0">Resumo com base na ${LEIS}.</p>
+ ${b("Quem pode doar",["Supermercados, restaurantes, bares, padarias e lanchonetes","Hospitais, cooperativas e indústrias alimentícias","Outros estabelecimentos que produzem ou fornecem alimentos","Pessoas físicas"])}
+ ${b("O que pode ser doado",["Alimentos in natura, industrializados ou refeições preparadas","Excedentes não comercializados ou sobras seguras para o consumo","Dentro do prazo de validade e das normas higiênico-sanitárias","Embalagem ou aparência com dano são aceitas, desde que a segurança esteja preservada"])}
+ ${b("O que é proibido",["Restos já servidos ou manipulados diretamente pelo consumidor final","Produtos vencidos ou impróprios para a saúde"])}
+ ${b("Quem recebe",["Pessoas, famílias ou grupos em situação de vulnerabilidade ou de risco alimentar"])}
+ ${b("Responsabilidade",["Doador e intermediários (bancos de alimentos, ONGs) só respondem civil ou administrativamente se houver dolo","A responsabilidade do doador termina na primeira entrega ao intermediário ou ao beneficiário final","A do intermediário termina na primeira entrega ao beneficiário final"])}
+ ${b("Natureza da doação",["É gratuita","Não configura relação de consumo, mesmo quando há publicidade direta ou indireta"])}
+ <p class="muted" style="margin:0;font-size:12.5px">Este resumo é informativo e não substitui a leitura das leis nem orientação jurídica ou da vigilância sanitária local.</p>`)}
+
+/* ---------- DOAR (ponte inteligente) ---------- */
+function score(o,w){
+  let s=0,why=[];const n=o.needs.find(x=>x.c===w.cat);
+  if(n){s+=40;why.push("Precisa de "+n.i.toLowerCase());if(n.urg){s+=15;why.push("Urgente")}}
+  else if(o.aceita.includes(w.cat)){s+=25;why.push("Aceita essa categoria")}
+  else return null;
+  if(sameB(o)){s+=25;why.push("No seu bairro")}else if(o.km){s+=Math.max(0,25-o.km*1.6);why.push(o.km.toFixed(1).replace(".",",")+" km")}else{s+=8;why.push(o.bairro)}
+  s+=o.status==="verificado"?20:o.status==="inspecao"?8:0;
+  if(w.modo==="coleta"&&o.coleta){s+=5;why.push("Faz coleta")}
+  return {o,s:Math.min(99,Math.round(s)),why};
+}
+function vDoar(){
+  const w=state.wiz,c=CATS.find(x=>x.k===w.cat);
+  const st=["O que doar","Detalhes","Como entregar","Escolher ONG"];
+  let body="";
+  if(w.step===1)body=`<div class="cats">${CATS.map(c=>`<button class="cat" data-cat="${c.k}" aria-pressed="${w.cat===c.k}">${svg(c.i)}<b>${c.n}</b><span>${c.d}</span></button>`).join("")}</div>`;
+  if(w.step===2)body=`<div class="form"><div class="field"><label for="wq">Quantidade (${c.u})</label><input class="inp" id="wq" type="number" min="1" value="${esc(w.q)}" placeholder="Ex.: 10"></div><div class="field" style="grid-column:span 2;min-width:0"><label for="wd">Descrição</label><input class="inp" id="wd" value="${esc(w.desc)}" placeholder="Ex.: arroz, feijão e óleo, validade até 2027"></div></div>
+   <p class="muted" style="margin:0">Dica: itens com validade, tamanho ou estado de conservação informados são aceitos mais rápido.</p>`;
+  if(w.step===2&&w.cat==="alimentos")body+=foodForm(w);
+  if(w.step===3)body=`<div class="cats">${[["coleta","Coleta em casa","Um voluntário ou parceiro busca no seu endereço"],["entrega","Eu levo até a ONG","Você recebe o endereço e horário de recebimento"],["ponto","Ponto de coleta","Deixe em um mercado ou escola parceira"]].map(([k,n,d])=>`<button class="cat" data-modo="${k}" aria-pressed="${w.modo===k}"><b>${n}</b><span>${d}</span></button>`).join("")}</div>
+   <div class="field" style="max-width:260px"><label for="wcep">CEP (opcional)</label><input class="inp" id="wcep" inputmode="numeric" placeholder="00000-000" value="${esc(w.cep||"")}"></div>`;
+  if(w.step===4){
+    const ms=ONGS.map(o=>score(o,w)).filter(Boolean).sort((a,b)=>b.s-a.s);
+    body=`<p class="muted" style="margin:0">Ordenamos as ONGs pela compatibilidade com a sua doação: necessidade atual, urgência, distância e selo de verificação.</p>
+    <div style="display:flex;flex-direction:column;gap:10px">${ms.map((m,i)=>`<div class="match ${i===0?"best":""}"><div class="score" style="--v:${m.s}"><span class="num">${m.s}</span></div><div style="min-width:0"><b>${esc(m.o.nome)}</b> ${status(m.o)} ${i===0?'<span class="pill p-warn">Melhor ponte</span>':""}<div class="why">${m.why.map(esc).join(" · ")}</div></div><button class="btn sm go" data-pick="${m.o.id}">Doar aqui</button></div>`).join("")}</div>`;
+  }
+  return `<div class="head"><div><h1>Fazer uma doação</h1><p>Em quatro passos, encontramos a instituição que mais precisa do que você tem.</p></div><button class="btn ghost" data-open="regras">Regras para doar alimentos</button></div>
+  <div class="steps">${st.map((s,i)=>`<div class="step ${i+1===w.step?"on":i+1<w.step?"done":""}"><b>PASSO ${i+1}</b>${s}</div>`).join("")}</div>
+  <div class="panel" style="display:flex;flex-direction:column;gap:16px">${body}
+   <div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap">
+    <button class="btn ghost" data-wiz="back" ${w.step===1?"disabled":""}>Voltar</button>
+    ${w.step<4?`<button class="btn" data-wiz="next" ${w.step===1&&!w.cat?"disabled":""}>Continuar</button>`:""}
+   </div></div>`;
+}
+function impacto(d){return ({alimentos:Math.ceil(d.q/5),roupas:d.q,dinheiro:Math.ceil(d.q/50),voluntariado:d.q*3,material:d.q,higiene:d.q,moveis:d.q*2})[d.cat]||1}
+
+/* ---------- ONGS ---------- */
+function vOngs(){
+  const q=state.q.toLowerCase();
+  const causas=["todas",...new Set(ONGS.map(o=>o.causa))];
+  let os=ONGS.filter(o=>(state.causa==="todas"||o.causa===state.causa)&&(!state.soVerif||o.status==="verificado"));
+  if(q)os=os.filter(o=>(o.nome+o.causa+o.bairro+o.needs.map(n=>n.i).join()).toLowerCase().includes(q));
+  os.sort(near);
+  return `<div class="head"><div><h1>ONGs e instituições</h1><p>${ONGS.filter(o=>o.status==="verificado").length} verificadas pela equipe IFOMME, ${ONGS.filter(o=>o.status!=="verificado").length} em processo.</p></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" data-open="indicar">Indicar uma ONG</button><button class="btn" data-open="cadastrar">Cadastrar minha ONG</button></div></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><div class="chips">${causas.map(c=>`<button class="chip" data-causa="${esc(c)}" aria-pressed="${state.causa===c}">${c==="todas"?"Todas as causas":esc(c)}</button>`).join("")}</div>
+   <label style="display:flex;gap:6px;align-items:center;font-size:13.5px;font-weight:600;margin-left:auto"><input type="checkbox" id="soV" ${state.soVerif?"checked":""}> Só verificadas</label></div>
+  <div class="ongs">${os.map(o=>`<article class="ong"><div class="phead">${av(o)}<div class="who"><h3>${esc(o.nome)}</h3><span class="meta">${esc(o.causa)} · ${esc(o.bairro)}${o.km?" · "+dist(o):""}</span></div></div>
+   <div>${status(o)} <span class="pill p-neutral num">${o.indic} indicações</span></div>
+   ${o.needs.map(n=>`<div><div style="display:flex;justify-content:space-between;font-size:13px;gap:8px"><span>${esc(n.i)}${n.urg?' <span class="pill p-crit">urgente</span>':""}</span><span class="num muted">${pct(n.q,n.m)}%</span></div><div class="bar ${n.urg?"urg":""}" style="margin-top:5px"><i style="width:${pct(n.q,n.m)}%"></i></div></div>`).join("")}
+   <div class="foot"><button class="btn sm" data-quick="${o.id}|${o.needs[0].c}">Doar</button><button class="btn sm ghost" data-chat="${o.id}">Conversar</button><button class="btn sm ghost" data-ong="${o.id}">Ver perfil</button><button class="btn sm ghost" data-follow="${o.id}" aria-pressed="${follows.has(o.id)}">${follows.has(o.id)?"Seguindo":"Seguir"}</button></div></article>`).join("")||'<div class="panel muted">Nenhuma ONG encontrada. Limpe a busca ou os filtros.</div>'}</div>`;
+}
+
+/* ---------- CONVERSAS ---------- */
+let CH={},isAdmin=false,U=null,NAMES={},known=new Set(),wq={};
+const meKey=()=>uid||"local";
+function names(){if(!U||!U.profiles)return;const ids=[...new Set([...Object.keys(CH),...Object.keys(PERF),...Object.keys(MAPS.doacoes)])].filter(k=>k!=="local"&&!(k in NAMES));if(!ids.length)return;ids.forEach(k=>NAMES[k]="");Promise.resolve(U.profiles(ids)).then(ps=>{ids.forEach(k=>NAMES[k]=(ps&&ps[k]&&ps[k].name)||"");if(["chat","equipe","minhaong"].includes(state.view))soft()},()=>{})}
+const pname=u=>u===meKey()?"Você":(NAMES[u]||"Doador");
+function okRep(r,ong){if(r===meKey())return true;const a=APR[r];return !!a&&(a.tipo==="equipe"||(a.tipo==="ong"&&a.ong===ong))}
+function getThread(u,ong){const base=((((CH[u]||{}).threads||{})[ong]||{}).msgs),out=(Array.isArray(base)?base:[]).map(m=>({f:"u",t:String(m.t||""),ts:+m.ts||0})),k=u+"|"+ong;
+ for(const r in CH){const rp=((CH[r]||{}).replies||{})[k];if(rp&&Array.isArray(rp.msgs)&&okRep(r,ong))rp.msgs.forEach(m=>out.push({f:"o",t:String(m.t||""),ts:+m.ts||0}))}
+ return out.sort((a,b)=>a.ts-b.ts)}
+function threadList(mode){const me=meKey(),mine=role()==="ong"?myOng():null,keys=new Set(),out=[];
+ for(const u in CH){const t=(CH[u]||{}).threads||{};for(const ong in t)keys.add(u+"|"+ong);const r=(CH[u]||{}).replies||{};for(const k in r)keys.add(k)}
+ keys.forEach(k=>{const i=k.indexOf("|"),u=k.slice(0,i),ong=k.slice(i+1);if(i<1||!ONGS.some(o=>o.id===ong))return;if(mode==="me"&&u!==me)return;if(mode==="ong"&&mine&&ong!==mine)return;const msgs=getThread(u,ong);if(msgs.length)out.push({u,ong,msgs,ts:msgs[msgs.length-1].ts})});
+ return out.sort((a,b)=>b.ts-a.ts)}
+function sendMsg(u,ong,from,text){const me=meKey(),now=Date.now(),doc=CH[me]||{},field=from==="o"?"replies":"threads",key=from==="o"?u+"|"+ong:ong;
+ const prev=((doc[field]||{})[key]||{}).msgs,msgs=[...(Array.isArray(prev)?prev:[]),{t:text.slice(0,1000),ts:now}].slice(-80),th={msgs,ts:now};
+ CH={...CH,[me]:{...doc,[field]:{...(doc[field]||{}),[key]:th}}};
+ if(db&&uid){const create=!known.has(me);known.add(me);const ref=db.doc("chats/"+me),body={[field]:{[key]:th}};wq.c=(wq.c||Promise.resolve()).then(()=>W(create?ref.set(body):ref.update(body)));
+  if(from==="o"&&isAdmin&&!APR[me]){APR={...APR,[me]:{tipo:"equipe"}};W(db.doc("aprov/"+me).set({tipo:"equipe",ts:now}))}}}
+function openChat(ong){if(role()==="ong"||role()==="inspetor"){closeLayer();toast("Iniciar conversas com instituições é para o perfil de doador");return}state.chat={mode:"me",u:meKey(),ong};closeLayer();go("chat")}
+const QUICK=["Vocês ainda precisam dessa doação?","Qual o horário de recebimento?","Vocês fazem coleta no meu bairro?","Como posso ser voluntário?"];
+function vChat(){
+  const c=state.chat||(state.chat={mode:"me",u:meKey(),ong:null}),r=role();if(r==="ong")c.mode="ong";else if(r!=="equipe")c.mode="me";
+  const list=threadList(c.mode);
+  const sel=c.ong&&byId(c.ong).id?c:null,o=sel?byId(c.ong):null,msgs=sel?getThread(c.u,c.ong):[];
+  const asOng=c.mode==="ong";
+  if(sel&&msgs.length){const sk=c.mode+c.u+"|"+c.ong,lt=msgs[msgs.length-1].ts;if(lt>(SEEN.t[sk]||0)){SEEN.t[sk]=lt;saveSeen()}}
+  const hm=ts=>new Date(ts).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  const side=`<div class="clist ${sel?"hidem":""}">
+   ${r==="equipe"?`<div class="chips" style="padding:0 4px 8px"><button class="chip" data-cmode="me" aria-pressed="${!asOng}">Minhas conversas</button><button class="chip" data-cmode="ong" aria-pressed="${asOng}">Atendimento das ONGs</button></div>`:""}
+   ${list.map(t=>{const g=byId(t.ong),last=t.msgs[t.msgs.length-1];return `<button class="citem" data-thread="${esc(t.u)}|${esc(t.ong)}" aria-current="${!!sel&&t.u===c.u&&t.ong===c.ong}">${av(g)}<div style="min-width:0;flex:1"><div class="cn"><b>${asOng?esc(pname(t.u))+" → ":""}${esc(g.nome)}</b><span class="muted num">${last?ago(last.ts):""}</span></div><div class="cl muted">${last?(last.f===(asOng?"o":"u")?"Você: ":"")+esc(last.t):"Sem mensagens"}</div></div></button>`}).join("")||`<div class="muted" style="padding:14px 8px">${asOng?"Nenhum doador escreveu para as ONGs ainda.":"Você ainda não tem conversas. Escolha uma instituição abaixo para começar."}</div>`}
+   ${!asOng?`<div class="label" style="padding:14px 8px 6px">Nova conversa</div>${ONGS.filter(g=>!list.some(t=>t.ong===g.id)).map(g=>`<button class="citem" data-chat="${g.id}">${av(g)}<div style="min-width:0;flex:1"><div class="cn"><b>${esc(g.nome)}</b></div><div class="cl muted">${esc(g.causa)} · ${esc(g.bairro)}</div></div></button>`).join("")}`:""}
+  </div>`;
+  const pane=sel?`<div class="cpane">
+   <div class="chead"><button class="iconbtn backm" data-cback aria-label="Voltar às conversas">←</button>${av(o)}<div style="min-width:0;flex:1"><b>${esc(o.nome)}</b> ${status(o)}<div class="muted" style="font-size:12.5px">${asOng?"Respondendo em nome da ONG para "+esc(pname(c.u)):esc(o.causa)+" · "+esc(o.bairro)}</div></div><button class="btn sm ghost" data-ong="${o.id}">Perfil</button></div>
+   <div class="msgs" id="msgs">${msgs.map(m=>{const mine=m.f===(asOng?"o":"u");return `<div class="msg ${mine?"me":""}"><div class="bub">${esc(m.t)}</div><span class="num">${hm(m.ts)}</span></div>`}).join("")||`<div class="muted" style="margin:auto;text-align:center;max-width:32ch">Comece a conversa com ${esc(o.nome)}. Combine a coleta, tire dúvidas ou ofereça ajuda.</div>`}</div>
+   ${!asOng&&!msgs.length?`<div class="chips" style="padding:0 12px 10px">${QUICK.map(q=>`<button class="chip" data-qmsg="${esc(q)}">${esc(q)}</button>`).join("")}</div>`:""}
+   <form class="cform" id="chatF"><input class="inp" id="chatIn" maxlength="1000" autocomplete="off" placeholder="${asOng?"Responder como "+esc(o.nome):"Escreva uma mensagem"}…" aria-label="Mensagem"><button class="btn" type="submit" aria-label="Enviar">${svg("send")}</button></form>
+  </div>`:`<div class="cpane empty hidem"><div class="muted" style="margin:auto;text-align:center;max-width:34ch">Selecione uma conversa ou comece uma nova com uma instituição.</div></div>`;
+  return `<div class="head"><div><h1>Conversas</h1><p>Fale direto com as instituições para combinar coletas, tirar dúvidas e acompanhar sua doação.</p></div></div><div class="chat">${side}${pane}</div>`;
+}
+
+/* ---------- INSPEÇÃO ---------- */
+function inspScore(id){const c=byId(id).insp||{};return CHECKS.reduce((s,k)=>s+(c[k.k]?k.w:0),0)}
+function vInsp(){
+  const fila=ONGS.filter(o=>o.status!=="verificado"||Object.keys(o.insp||{}).length);
+  if(!fila.length)return `<div class="head"><div><h1>Inspeção de instituições</h1><p>Nenhuma instituição na fila. Novos cadastros e indicações aparecem aqui.</p></div></div>`;
+  const o=fila.find(f=>f.id===state.sel)||fila[0],c=o.insp||{},sc=inspScore(o.id);state.sel=o.id;
+  const lvl=sc>=80?["Aprovável","p-ok"]:sc>=50?["Em andamento","p-warn"]:["Insuficiente","p-crit"];
+  return `<div class="head"><div><h1>Inspeção de instituições</h1><p>Cada ONG passa por checagem documental e visita presencial antes de receber o selo de verificada.</p></div></div>
+  <div class="insp"><div class="queue"><span class="label">Fila de inspeção</span>${fila.map(f=>`<button class="qitem" data-sel="${f.id}" aria-current="${f.id===o.id}"><b>${esc(f.nome)}</b><span class="muted" style="font-size:12.5px">${esc(f.bairro)} · ${f.indic} indicações</span><span>${status(f)} <span class="pill p-neutral num">${inspScore(f.id)}/100</span></span></button>`).join("")}</div>
+  <div class="panel" style="display:flex;flex-direction:column;gap:14px">
+   <div class="phead">${av(o)}<div class="who"><h2 style="font-size:20px">${esc(o.nome)}</h2><span>${esc(o.causa)} · ${esc(o.bairro)}, ${esc(o.cidade)}${o.cnpj?" · CNPJ "+esc(o.cnpj):""}</span></div></div>
+   <div class="gauge"><div class="big num">${sc}<span style="font-size:18px" class="muted">/100</span></div><div style="flex:1;min-width:160px"><div class="bar"><i style="width:${sc}%"></i></div><div style="margin-top:8px"><span class="pill ${lvl[1]}">${lvl[0]}</span> <span class="muted" style="font-size:13px">Selo liberado a partir de 80 pontos, com visita obrigatória.</span></div></div></div>
+   <div>${CHECKS.map(k=>`<label class="check"><input type="checkbox" data-chk="${k.k}" ${c[k.k]?"checked":""}><div><b>${k.t}</b><div class="muted" style="font-size:13px">${k.d}</div></div><span class="w num">${k.w} pts</span></label>`).join("")}</div>
+   <div class="field"><label for="obs">Observações do inspetor</label><textarea class="inp" id="obs" rows="3" placeholder="Ex.: cozinha em boas condições, cadastro de famílias atualizado.">${esc(o.inspObs||"")}</textarea></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-approve="${o.id}" ${sc>=80&&c.visita?"":"disabled"}>Conceder selo de verificada</button><button class="btn ghost" data-pend="${o.id}">Pedir documentos à ONG</button></div>
+  </div></div>`;
+}
+
+/* ---------- IMPACTO ---------- */
+function vImp(){
+  const pess=MINE.reduce((s,d)=>s+impacto(d),0),ongsN=new Set(MINE.map(d=>d.ong)).size;
+  const B=[["1ª","Primeira ponte","1 doação",MINE.length>=1],["5×","Doador frequente","5 doações",MINE.length>=5],["3","Rede do bem","3 ONGs diferentes",ongsN>=3],["★","Embaixador","Indicou uma ONG que foi verificada",[...myInd].some(i=>byId(i).status==="verificado")]];
+  return `<div class="head"><div><h1>Meu impacto</h1><p>A instituição confirma cada etapa, do registro até o relato de como a doação foi usada.</p></div><button class="btn accent" data-go="doar">${svg("gift")}Nova doação</button></div>
+  <div class="stats"><div class="stat"><span class="label">Doações</span><div class="big num">${MINE.length}</div></div><div class="stat"><span class="label">Pessoas (estimativa)</span><div class="big num">≈ ${pess}</div></div><div class="stat"><span class="label">ONGs apoiadas</span><div class="big num">${ongsN}</div></div><div class="stat"><span class="label">ONGs que sigo</span><div class="big num">${follows.size}</div></div></div>
+  <div class="panel"><h3 style="font-size:17px;margin-bottom:6px">Rastreio das doações</h3><div class="track">${MINE.slice().reverse().map(d=>{const o=byId(d.ong);return `<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(d.desc)}</b><span class="muted" style="font-size:13px">${esc(o.nome)} · ${d.data}</span></div><div class="tl">${ETAPAS.map((e,i)=>`<div class="s ${i<d.etapa?"done":i===d.etapa?"cur":""}">${e}</div>`).join("")}</div>${d.cat==="alimentos"&&d.etapa>=3?`<div class="sample" style="margin-top:8px">Entrega feita: a responsabilidade do doador terminou aqui (Lei 14.016/2020).</div>`:""}${d.etapa>=4&&d.nota?`<div class="sample" style="margin-top:8px">Relato da instituição: ${esc(d.nota)}</div>`:""}${d.etapa<3&&!d.legacy&&byId(d.ong).id?`<button class="act" data-chat="${d.ong}" style="margin-top:8px">Falar com a instituição</button>`:""}</div>`}).join("")||'<p class="muted" style="margin:6px 0 0">Você ainda não registrou doações. Elas aparecem aqui assim que você confirmar a primeira.</p>'}</div></div>
+  <div class="panel"><h3 style="font-size:17px;margin-bottom:12px">Conquistas</h3><div class="badges">${B.map(b=>`<div class="badge ${b[3]?"got":""}"><i>${b[0]}</i><div><b>${b[1]}</b><div class="muted" style="font-size:12px">${b[2]}</div></div></div>`).join("")}</div></div>`;
+}
+
+/* ---------- overlays ---------- */
+function drawer(html){$("#layer").innerHTML=`<div class="scrim" data-close><div class="drawer" role="dialog" aria-modal="true">${'<button class="iconbtn x" data-close aria-label="Fechar">✕</button>'}${html}</div></div>`;const f=$("#layer input,#layer button.btn");f&&f.focus()}
+function closeLayer(){$("#layer").innerHTML=""}
+function perfil(id){const o=byId(id),sc=inspScore(o.id)||o.nota;
+ drawer(`<div class="phead">${av(o)}<div class="who"><h2 style="font-size:22px">${esc(o.nome)}</h2><span>${esc(o.causa)} · ${esc(o.bairro)}, ${esc(o.cidade)}</span></div></div><div>${status(o)} ${o.benef?`<span class="pill p-neutral num">${o.benef} beneficiados/mês</span>`:""} <span class="pill p-neutral num">${o.indic||0} indicações</span></div><p style="margin:0">${esc(o.desc)}</p>${o.horario||o.coleta?`<div class="muted" style="font-size:13.5px">${o.horario?"Recebimento: "+esc(o.horario):""}${o.horario&&o.coleta?" · ":""}${o.coleta?"Faz coleta no endereço do doador":""}</div>`:""}
+ <div class="gauge"><div class="big num" style="font-size:30px">${sc}</div><div><b>Relatório de inspeção</b><div class="muted" style="font-size:13px">${o.status==="verificado"?"Documentos, visita e referências conferidos.":"Inspeção ainda em andamento. Doe com atenção."}</div></div></div>
+ <span class="label">Necessidades</span>${o.needs.map(n=>`<div><div style="display:flex;justify-content:space-between;font-size:13.5px"><span>${esc(n.i)}</span><span class="num muted">${n.q}/${n.m}</span></div><div class="bar ${n.urg?"urg":""}" style="margin-top:5px"><i style="width:${pct(n.q,n.m)}%"></i></div></div>`).join("")}
+ <span class="label">Aceita</span><div class="chips">${o.aceita.map(a=>`<span class="chip">${CATS.find(c=>c.k===a).n}</span>`).join("")}</div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-quick="${o.id}|${o.needs[0].c}">Doar para esta ONG</button><button class="btn ghost" data-chat="${o.id}">${svg("chat")}Conversar</button><button class="btn ghost" data-follow="${o.id}">${follows.has(o.id)?"Seguindo":"Seguir"}</button><button class="btn ghost" data-recom="${o.id}" ${myInd.has(o.id)?"disabled":""}>${myInd.has(o.id)?"Recomendada por você":"Recomendar"}</button></div>`)}
+function formIndicar(cad){drawer(`<h2 style="font-size:22px">${cad?"Cadastrar minha ONG":"Indicar uma ONG"}</h2><p class="muted" style="margin:0">${cad?"Depois do cadastro, a instituição entra na fila de inspeção da equipe IFOMME.":"Conhece uma instituição séria que precisa de doações? A gente verifica e conecta."}</p>
+ <form id="fInd" style="display:flex;flex-direction:column;gap:12px"><div class="field"><label for="fn">Nome da instituição</label><input class="inp" id="fn" required></div>
+ <div class="field"><label for="fc">Causa</label><select id="fc">${["Fome","Crianças","Idosos","Mulheres","Pessoas em situação de rua","Animais","Saúde","Educação"].map(c=>`<option>${c}</option>`).join("")}</select></div>
+ <div class="field"><label for="fb">Bairro</label><input class="inp" id="fb" required></div>
+ <div class="field"><label for="fci">Cidade</label><input class="inp" id="fci" required></div>
+ ${cad?'<div class="field"><label for="fcnpj">CNPJ</label><input class="inp" id="fcnpj" placeholder="00.000.000/0001-00" required></div>':'<div class="field"><label for="fw">Por que você indica?</label><textarea class="inp" id="fw" rows="3"></textarea></div>'}
+ <button class="btn" type="submit">${cad?"Enviar cadastro":"Enviar indicação"}</button></form>`);
+ $("#fInd").addEventListener("submit",e=>{e.preventDefault();const id=newId();
+  store.set("ongs",id,{insp:{},ts:Date.now(),nome:$("#fn").value.trim(),causa:$("#fc").value,bairro:$("#fb").value.trim(),cidade:$("#fci").value.trim(),cnpj:($("#fcnpj")||{value:""}).value.trim().slice(0,20),km:0,status:"pendente",nota:0,benef:0,indic:1,aceita:["alimentos","dinheiro"],needs:[{i:"Necessidades a confirmar",c:"alimentos",q:0,m:1}],desc:"Cadastro recebido. Aguardando inspeção."});
+  if(!cad){myInd.add(id);savePrefs()}
+  if(cad&&!isAdmin){closeLayer();setPerfil("ong",id);return}
+  closeLayer();toast(cad?"Cadastro enviado. Ele já está na fila de inspeção.":"Indicação enviada. Obrigado por ampliar a rede!");state.sel=id;render()})}
+function confirmar(id){const o=byId(id),w=state.wiz,c=CATS.find(x=>x.k===w.cat);
+ drawer(`<h2 style="font-size:22px">Confirmar doação</h2><div class="panel" style="background:var(--sunk);border:0"><div class="label">Você vai doar</div><b style="font-size:17px">${esc(w.desc||(w.q+" "+c.u+" de "+c.n.toLowerCase()))}</b><div class="label" style="margin-top:12px">Para</div><b>${esc(o.nome)}</b> ${status(o)}<div class="label" style="margin-top:12px">Entrega</div><b>${({coleta:"Coleta em casa",entrega:"Eu levo até a ONG",ponto:"Ponto de coleta"})[w.modo]}</b>${w.cat==="alimentos"?`<div class="label" style="margin-top:12px">Doador e validade</div><b>${esc(w.quem||"Pessoa física")} · ${esc((w.val||"").split("-").reverse().join("/"))}</b>`:""}</div>${w.cat==="alimentos"?TERMO:""}
+ ${w.cat==="dinheiro"?(o.pix?`<div class="field"><label for="pix">Chave PIX informada pela instituição</label><div style="display:flex;gap:8px"><input class="inp" id="pix" readonly value="${esc(o.pix)}" style="flex:1;min-width:0"><button class="btn sm ghost" id="cp" type="button">Copiar</button></div><span class="muted" style="font-size:12.5px">Confira o nome do favorecido no seu banco antes de pagar. O IFOMME não processa pagamentos.</span></div>`:`<div class="legal"><b>Chave PIX não cadastrada</b><span>Esta instituição ainda não informou uma chave PIX. Registre a intenção de doar e combine o pagamento pelo chat.</span></div>`):""}
+ <p class="muted" style="margin:0;font-size:13px">A instituição confirma cada etapa e você acompanha tudo em Meu impacto.</p><button class="btn" id="ok">Confirmar doação</button>`);
+ const cp=$("#cp");cp&&cp.addEventListener("click",()=>{navigator.clipboard.writeText($("#pix").value).then(()=>toast("Chave PIX copiada"),()=>{$("#pix").select();toast("Selecione e copie a chave")})});
+ $("#ok").addEventListener("click",()=>{const q=+w.q||1;putMap("doacoes",meKey(),"items",newId(),{...(w.cat==="alimentos"?{quem:w.quem||"Pessoa física",atipo:w.atipo||"indust",val:w.val||null,decl:true,declTs:Date.now()}:{}),kind:"doacao",ong:o.id,cat:w.cat,q,desc:w.desc||(q+" "+c.u+" de "+c.n.toLowerCase()),modo:w.modo,etapa:0,ts:Date.now(),data:new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"short"})});
+  state.wiz={step:1,cat:null,q:"",desc:"",modo:"coleta",cep:""};closeLayer();toast("Doação registrada! Acompanhe em Meu impacto.");go("impacto")})}
+
+/* ---------- events ---------- */
+document.addEventListener("click",e=>{
+ const t=e.target.closest("[data-go],[data-f],[data-like],[data-share],[data-rsvp],[data-quick],[data-catgo],[data-cat],[data-chat],[data-thread],[data-step],[data-talk],[data-delpost],[data-purge],[data-recom],[data-docok],[data-ev],[data-setrole],[data-viewas],[data-apr],[data-rev],[data-needurg],[data-needdel],[data-savedesc],[data-cmode],[data-cback],[data-qmsg],[data-modo],[data-wiz],[data-pick],[data-causa],[data-ong],[data-follow],[data-open],[data-sel],[data-approve],[data-pend],[data-adv],[data-close]");
+ if(!t)return;const d=t.dataset;
+ if(d.close!==undefined){if(e.target===t||t.classList.contains("x"))closeLayer();return}
+ if(d.go){e.preventDefault();closeLayer();go(d.go)}
+ else if(d.f){state.filtro=d.f;render()}
+ else if(d.like){const id=d.like;likes.has(id)?likes.delete(id):likes.add(id);savePrefs();render()}
+ else if(d.share){const u=location.href.split("#")[0]+"#mural";(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast("Link copiado para compartilhar"),()=>toast("Copie o link na barra do navegador"))}
+ else if(d.rsvp){rsvp.has(d.rsvp)?rsvp.delete(d.rsvp):rsvp.add(d.rsvp);savePrefs();toast(rsvp.has(d.rsvp)?"Presença confirmada":"Presença cancelada");render()}
+ else if(d.quick){const[id,c]=d.quick.split("|");state.wiz={step:2,cat:c,q:"",desc:"",modo:"coleta",cep:"",pre:id};closeLayer();go("doar")}
+ else if(d.catgo){state.wiz={step:2,cat:d.catgo,q:"",desc:"",modo:"coleta",cep:""};go("doar")}
+ else if(d.cat){state.wiz.cat=d.cat;render()}
+ else if(d.modo){state.wiz.modo=d.modo;render()}
+ else if(d.wiz){saveWiz();if(d.wiz==="next"){if(state.wiz.step===2&&!(+state.wiz.q>0)){toast("Informe a quantidade para continuar");return}if(state.wiz.step===2&&state.wiz.cat==="alimentos"){const w=state.wiz;if(!w.val){toast("Informe a validade dos alimentos");return}if(w.val<hoje()){toast("Alimentos vencidos não podem ser doados");return}if(!(w.decl||[]).every(Boolean)||(w.decl||[]).length<DECL.length){toast("Confirme os quatro itens da declaração para continuar");return}if(w.quem!==state.quem){state.quem=w.quem;savePrefs()}}state.wiz.step++}else state.wiz.step--;render()}
+ else if(d.pick)confirmar(d.pick)
+ else if(d.causa){state.causa=d.causa;render()}
+ else if(d.ong){e.preventDefault();perfil(d.ong)}
+ else if(d.follow){const id=d.follow;follows.has(id)?follows.delete(id):follows.add(id);savePrefs();toast(follows.has(id)?"Você vai ver as ações dessa ONG no mural":"Você deixou de seguir");closeLayer();render()}
+ else if(d.open)d.open==="rep"?formRep():d.open==="regras"?formRegras():d.open==="local"?formLocal():formIndicar(d.open==="cadastrar")
+ else if(d.step){const i=d.step.indexOf("|");stepDon(d.step.slice(0,i),d.step.slice(i+1))}
+ else if(d.talk){const i=d.talk.indexOf("|");state.chat={mode:"ong",u:d.talk.slice(0,i),ong:d.talk.slice(i+1)};go("chat")}
+ else if(d.delpost){if(state.delPost!==d.delpost){state.delPost=d.delpost;render()}else{state.delPost=null;store.del("posts",d.delpost);toast("Publicação excluída");render()}}
+ else if(d.purge){if(!state.purge){state.purge=true;render()}else{state.purge=false;const os=ONGS.filter(o=>o.exemplo).map(o=>o.id),ps=POSTS.filter(p=>p.exemplo).map(p=>p.id);(async()=>{for(const id of ps)await store.del("posts",id);for(const id of os)await store.del("ongs",id);toast("Dados de exemplo apagados");render()})()}}
+ else if(d.recom){const o=byId(d.recom);if(o.id&&!myInd.has(o.id)){myInd.add(o.id);savePrefs();store.update("ongs",o.id,{indic:(+o.indic||0)+1});toast("Obrigado! Sua recomendação conta para a fila de inspeção.")}closeLayer();render()}
+ else if(d.docok){store.update("ongs",d.docok,{pendDoc:false});toast("Aviso removido");render()}
+ else if(d.ev){const ev=(state.evs||[])[+d.ev],pp=$(".pop");pp&&pp.remove();if(ev){if(ev.chat)state.chat={...ev.chat};go(ev.go)}}
+ else if(d.setrole){closeLayer();setPerfil(d.setrole)}
+ else if(d.viewas){viewAs=d.viewas==="equipe"?null:d.viewas;render()}
+ else if(d.apr){const q=PERF[d.apr];if(q&&db){const a={tipo:q.tipo,ong:q.ong||null,ts:Date.now()};APR={...APR,[d.apr]:a};W(db.doc("aprov/"+d.apr).set(a));toast("Acesso aprovado");render()}}
+ else if(d.rev){if(db){const n={...APR};delete n[d.rev];APR=n;W(db.doc("aprov/"+d.rev).delete());toast("Acesso revogado");render()}}
+ else if(d.needurg)updNeeds(byId(myOng()),n=>{n[+d.needurg].urg=!n[+d.needurg].urg})
+ else if(d.needdel){const o=byId(myOng());if(o.needs.length<2){toast("Mantenha pelo menos uma necessidade");return}updNeeds(o,n=>{n.splice(+d.needdel,1)})}
+ else if(d.savedesc){const acc=[...document.querySelectorAll("[data-acc]:checked")].map(e=>e.dataset.acc);store.update("ongs",d.savedesc,{desc:$("#mDesc").value.trim().slice(0,600),horario:$("#mHor").value.trim().slice(0,80),pix:$("#mPix").value.trim().slice(0,80),coleta:$("#mCol").checked,aceita:acc.length?acc:["alimentos"]});toast("Dados salvos");render()}
+ else if(d.chat)openChat(d.chat)
+ else if(d.thread){const[u,ong]=d.thread.split("|");state.chat={mode:state.chat.mode,u,ong};render()}
+ else if(d.cmode){state.chat={mode:d.cmode,u:meKey(),ong:null};render()}
+ else if(d.cback!==undefined){state.chat.ong=null;render()}
+ else if(d.qmsg){const c=state.chat;sendMsg(c.u,c.ong,"u",d.qmsg);render()}
+ else if(d.sel){state.sel=d.sel;render()}
+ else if(d.approve){const o=byId(d.approve);store.update("ongs",o.id,{status:"verificado",nota:inspScore(o.id)});toast("Selo concedido a "+o.nome);render()}
+ else if(d.pend){const o=byId(d.pend);store.update("ongs",o.id,o.status==="pendente"?{pendDoc:true,status:"inspecao"}:{pendDoc:true});toast("Pedido registrado. "+o.nome+" vê o aviso no painel da instituição.");render()}
+});
+document.addEventListener("change",e=>{
+ if(e.target.dataset.chk){const o=byId(state.sel),insp={...(o.insp||{}),[e.target.dataset.chk]:e.target.checked?1:0},up={insp};if(o.status==="pendente"&&e.target.checked)up.status="inspecao";store.update("ongs",o.id,up);soft()}
+ if(e.target.id==="soV"){state.soVerif=e.target.checked;render()}
+ if(e.target.id==="asOng"){state.asOng=e.target.value;render()}
+ if(e.target.id==="obs"){const o=byId(state.sel);if(o.id){store.update("ongs",o.id,{inspObs:e.target.value.slice(0,1000),inspTs:Date.now()});toast("Observações salvas")}}
+ if(e.target.dataset.needset){const i=+e.target.dataset.needset,v=Math.max(0,+e.target.value||0);updNeeds(byId(myOng()),n=>{n[i].q=Math.min(n[i].m,v)});toast("Quantidade atualizada")}
+});
+document.addEventListener("submit",e=>{if(e.target.id==="fNeed"){e.preventDefault();const i=$("#ni").value.trim(),m=Math.max(1,+$("#nm").value||1),c=$("#nc").value;if(!i)return;$("#ni").value="";$("#nm").value="";updNeeds(byId(myOng()),n=>{n.push({i:i.slice(0,80),c,q:0,m})});toast("Necessidade adicionada");return}
+ if(e.target.id!=="chatF")return;e.preventDefault();const i=$("#chatIn"),t=i.value.trim(),c=state.chat;if(!t||!c||!c.ong)return;sendMsg(c.u,c.ong,c.mode==="ong"?"o":"u",t);i.value="";render();const n=$("#chatIn");n&&n.focus()});
+function saveWiz(){const w=state.wiz;if($("#wq"))w.q=$("#wq").value;if($("#wd"))w.desc=$("#wd").value;if($("#wcep"))w.cep=$("#wcep").value;if($("#wquem")){w.quem=$("#wquem").value;w.atipo=$("#watipo").value;w.val=$("#wval").value;w.decl=DECL.map((_,i)=>$("#wd"+i).checked)}}
+document.addEventListener("click",e=>{if(e.target.id==="cPub"){const t=$("#cText").value.trim();if(!t){toast("Escreva algo antes de publicar");return}if(!$("#cOng").value){toast("Cadastre uma ONG antes de publicar");return}store.set("posts",newId(),{ong:$("#cOng").value,tipo:$("#cTipo").value,t,ts:Date.now(),ap:0});$("#cText").value="";if(!store.live("posts"))POSTS.sort((a,b)=>(b.ts||0)-(a.ts||0));toast("Publicado no mural");render()}});
+$("#q").addEventListener("input",e=>{state.q=e.target.value;if(!["mural","ongs"].includes(state.view)){location.hash="ongs"}else{const pos=e.target.selectionStart;render();}});
+$("#bell").addEventListener("click",e=>{e.stopPropagation();const open=$(".pop");if(open){open.remove();return}
+ const evs=state.evs=events(),p=document.createElement("div");p.className="pop";p.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px"><b>Notificações</b>${evs.length?'<button class="act" id="rd">Marcar como lidas</button>':""}</div>`+(evs.map((n,i)=>`<button class="notif ${n.ts>SEEN.n?"new":""}" data-ev="${i}"><div style="flex:1">${esc(n.t)}<div class="muted" style="font-size:12px">${ago(n.ts)}</div></div></button>`).join("")||'<div class="muted" style="padding:10px;font-size:13.5px">Nenhuma notificação por enquanto. Avisos de doações e mensagens aparecem aqui.</div>');
+ document.body.appendChild(p);const rd=$("#rd");rd&&rd.addEventListener("click",()=>{SEEN.n=Date.now();saveSeen();p.remove();renderNav()})});
+document.addEventListener("click",e=>{const p=$(".pop");if(p&&!p.contains(e.target)&&!e.target.closest("#bell"))p.remove()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeLayer();const p=$(".pop");p&&p.remove()}});
+$("#fontBtn").addEventListener("click",()=>{document.documentElement.classList.toggle("big");try{localStorage.setItem("ifomme-big",document.documentElement.classList.contains("big")?"1":"")}catch(_){}});
+try{if(localStorage.getItem("ifomme-big"))document.documentElement.classList.add("big")}catch(_){}
+// pre-selected ONG from quick donate: boost it in matches
+const _score=score;score=function(o,w){const r=_score(o,w);if(r&&w.pre===o.id){r.s=Math.min(99,r.s+30);r.why.unshift("ONG escolhida por você")}return r};
+window.addEventListener("hashchange",route);route();boot();
+</script>
+
+</body></html>

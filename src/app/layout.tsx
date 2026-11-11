@@ -1,30 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Nunito({
+  variable: "--font-display",
   subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const body = Nunito_Sans({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Resgata",
+  title: "IFOMME · doe o que sobra para quem precisa",
   description:
-    "Resgate de alimentos com comprovante de impacto verificável. Do mercado à ONG em minutos, com prova de entrega auditável.",
+    "O IFOMME conecta quem tem o que doar com instituições perto, com regras de segurança alimentar e acompanhamento de cada etapa da doação.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col bg-white text-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
         {children}
       </body>
     </html>
