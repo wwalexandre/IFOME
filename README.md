@@ -4,6 +4,9 @@
 
 Projeto do [Hack Brasil 2026](https://hackbrasil.com), trilha de logística e automação.
 
+- **Demo:** https://ifomme-wwalexandres-projects.vercel.app
+- **Protótipo:** https://ifomme-wwalexandres-projects.vercel.app/prototipo.html
+
 ## O problema
 
 Comida boa vai para o lixo enquanto milhões de pessoas vivem em insegurança alimentar. O problema não é falta de vontade de doar, são três travas:

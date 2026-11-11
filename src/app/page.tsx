@@ -64,7 +64,7 @@ export default function Home() {
             Abrir o protótipo
           </a>
           <a
-            href="https://github.com/"
+            href="https://github.com/wwalexandre/IFOME"
             className="rounded-full border border-neutral-300 px-6 py-3 font-bold transition hover:border-neutral-500 dark:border-neutral-700"
           >
             Ver o código
