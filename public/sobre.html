@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Sobre o IFOMME</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="O IFOMME conecta quem tem o que doar com instituições perto, com regras de segurança alimentar e acompanhamento de cada etapa da doação.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600&display=swap">
+<style>
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --sunk:#F4F4F4; --line:#EBEBEB;
+  --ink:#3B3B3B; --muted:#7A7A7A; --brand:#E5132E;
+  --display:"Nunito","Segoe UI",system-ui,sans-serif;
+  --body:"Nunito Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141414; --surface:#1E1E1E; --sunk:#2A2A2A; --line:#333333;
+  --ink:#F2F2F2; --muted:#A8A8A8; --brand:#FF3B50; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141414; --surface:#1E1E1E; --sunk:#2A2A2A; --line:#333333;
+  --ink:#F2F2F2; --muted:#A8A8A8; --brand:#FF3B50; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+main{max-width:720px;margin:0 auto;padding:56px 16px 80px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(40px,9vw,64px);font-weight:900;letter-spacing:-.03em}
+h2{font-size:24px;font-weight:800;margin-top:48px}
+h3{font-size:17px;font-weight:800}
+p{margin:12px 0}
+.tag{display:inline-block;background:color-mix(in srgb, var(--brand) 12%, transparent);color:var(--brand);
+  font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+.lead{font-size:20px;color:var(--muted);margin-top:16px}
+.acoes{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0 8px}
+.btn{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;font-weight:800;
+  padding:14px 26px;border-radius:999px}
+.btn.ghost{background:none;color:inherit;border:1px solid var(--line)}
+.grade{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:16px}
+.card{border:1px solid var(--line);border-radius:14px;padding:18px}
+.card p{margin:6px 0 0;color:var(--muted);font-size:15px}
+.passos{counter-reset:p;list-style:none;padding:0;margin:16px 0}
+.passos li{counter-increment:p;position:relative;padding:10px 0 10px 44px}
+.passos li::before{content:counter(p);position:absolute;left:0;top:10px;width:28px;height:28px;border-radius:999px;
+  background:var(--sunk);color:var(--ink);font-family:var(--display);font-weight:800;display:grid;place-items:center;font-size:14px}
+table{border-collapse:collapse;width:100%;margin-top:12px;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-family:var(--display);font-weight:800}
+footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+a{color:var(--brand)}
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">Hack Brasil 2026 · logística e automação</span>
+  <h1>IFOMME</h1>
+  <p class="lead">Doe o que sobra para quem precisa, perto de você, com as regras de segurança alimentar explicadas e cada etapa confirmada.</p>
+
+  <div class="acoes">
+    <a class="btn" href="/">Abrir o aplicativo</a>
+    <a class="btn ghost" href="https://github.com/wwalexandre/IFOME">Ver o código</a>
+  </div>
+
+  <h2>O problema</h2>
+  <p>Comida boa vai para o lixo enquanto milhões de pessoas vivem em insegurança alimentar. A trava não é falta de vontade de doar, são três fricções.</p>
+  <div class="grade">
+    <div class="card"><h3>Não saber para quem</h3><p>Quem quer doar não conhece a instituição do lado nem sabe do que ela precisa hoje.</p></div>
+    <div class="card"><h3>Medo de responder</h3><p>Mercado, padaria e restaurante temem responsabilidade sanitária e jurídica, mesmo com a lei a favor.</p></div>
+    <div class="card"><h3>A parte chata</h3><p>Combinar coleta, entrega e horário é onde a doação morre.</p></div>
+  </div>
+  <p>Do outro lado, a instituição não tem como avisar que hoje precisa de fralda e não de arroz.</p>
+
+  <h2>Como funciona</h2>
+  <ol class="passos">
+    <li>A instituição publica o que precisa, em que quantidade, com que urgência e em que horário recebe.</li>
+    <li>O doador busca por bairro e acha quem está perto, não uma lista nacional genérica.</li>
+    <li>Na hora de doar, o app mostra o que pode e o que não pode, e registra a declaração obrigatória do doador.</li>
+    <li>A doação percorre quatro etapas confirmadas pela instituição, do aceite ao relato de impacto.</li>
+  </ol>
+
+  <h2>Segurança jurídica</h2>
+  <p>Pela <a href="https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/l15224.htm" target="_blank" rel="noopener">Lei 15.224/2025</a>, doador e instituição só respondem por danos se houver dolo, e a doação não configura relação de consumo. A responsabilidade do doador termina na primeira entrega. O app explica isso no momento da doação, em vez de esconder num termo que ninguém lê.</p>
+
+  <h2>Além do alimento</h2>
+  <p>Roupas, material escolar, higiene, móveis, horas de voluntariado e doação direta para a chave Pix da instituição. <strong>O IFOMME não processa pagamentos:</strong> mostra a chave informada pela instituição e o doador paga pelo próprio banco.</p>
+
+  <h2>Para quem é</h2>
+  <table>
+    <tr><th>Quem doa</th><td>Pessoa física, mercado, restaurante, padaria, hospital, cooperativa ou indústria.</td></tr>
+    <tr><th>Instituições</th><td>ONGs, cozinhas comunitárias e casas de apoio, que passam por inspeção antes de entrar na rede.</td></tr>
+    <tr><th>Quem acompanha</th><td>O doador vê cada etapa da própria doação em Meu impacto.</td></tr>
+  </table>
+
+  <h2>Como foi construído</h2>
+  <table>
+    <tr><th>Interface</th><td>HTML, CSS e JavaScript, sem framework</td></tr>
+    <tr><th>Hospedagem</th><td>Cloudflare Pages</td></tr>
+    <tr><th>API</th><td>Pages Functions, que resolvem no servidor quem está pedindo e a que dados tem direito</td></tr>
+    <tr><th>Banco</th><td>Cloudflare D1</td></tr>
+  </table>
+  <p>A camada de dados fica atrás de um adaptador com a interface de um banco de documentos. Foi isso que permitiu trocar o banco inteiro sem reescrever a aplicação.</p>
+
+  <footer>
+    <p>Todos os dados mostrados no aplicativo são de exemplo. Nenhuma instituição real, CNPJ real, pessoa real ou chave Pix real.</p>
+    <p>Código aberto sob licença MIT.</p>
+  </footer>
+</main>
+</body>
+</html>

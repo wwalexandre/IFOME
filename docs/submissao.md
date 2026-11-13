@@ -32,7 +32,7 @@ CONFIANÇA
 Instituições passam por inspeção antes de entrar na rede, e o resultado fica visível ao lado do nome. Quem indica uma instituição nova também aparece.
 
 COMO FOI CONSTRUÍDO
-Interface em HTML, CSS e JavaScript, sem framework. Página do projeto em Next.js 16, publicada na Vercel. Dados no Supabase: Postgres, RLS por usuário, conta anônima para qualquer pessoa experimentar sem cadastro, e Realtime, então uma doação registrada numa tela aparece na outra sem recarregar. A camada de dados fica atrás de um adaptador com a interface de um banco de documentos, o que permitiu trocar o banco inteiro sem reescrever a aplicação.
+Interface em HTML, CSS e JavaScript, sem framework e sem etapa de build. Hospedagem no Cloudflare Pages, API em Pages Functions e banco no Cloudflare D1. Quem decide o acesso é o servidor: a API lê um cookie que o JavaScript da página não alcança, resolve quem está pedindo e filtra os dados privados, em vez de confiar no cliente. Uma doação feita numa janela aparece na outra em até 3 segundos, sem recarregar. A camada de dados fica atrás de um adaptador com a interface de um banco de documentos, e foi isso que permitiu trocar o banco inteiro sem reescrever a aplicação.
 
 DADOS
 Tudo o que aparece na demo é fictício. Nenhuma instituição real, CNPJ real, pessoa real ou chave Pix real.
@@ -58,7 +58,7 @@ https://github.com/wwalexandre/IFOME
 ## Demo
 
 ```
-https://ifomme-wwalexandres-projects.vercel.app
+https://ifomme.pages.dev
 ```
 
 ## Vídeo

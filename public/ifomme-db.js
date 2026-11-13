@@ -1,156 +1,149 @@
 /**
  * Camada de dados do IFOMME.
  *
- * O protótipo foi escrito contra uma API de documentos (coleção, documento,
- * escuta em tempo real). Este módulo entrega a mesma API sobre o Supabase,
- * então o aplicativo não precisa saber qual banco está embaixo.
+ * O aplicativo foi escrito contra uma API de documentos: coleção, documento,
+ * escuta. Este módulo entrega essa API falando com /api, que é uma função do
+ * Cloudflare Pages em cima do banco D1.
  *
- * Cada coleção é uma tabela com duas colunas que importam: `id` de texto e
- * `data` em jsonb. Os dados privados de cada pessoa ficam em `user_data`,
- * com o uid na chave e protegidos por RLS.
+ * Quem é o visitante não vem daqui. Vem de um cookie que o servidor emite e
+ * que o navegador não consegue ler, então não dá para se passar por outra
+ * pessoa mexendo no console. Os dados privados são filtrados no servidor.
  *
- * Se não houver configuração do Supabase, o módulo tenta o ambiente do
- * Claude, e se nem isso existir devolve null, que é o modo somente leitura
- * que o aplicativo já sabe tratar.
+ * Atualização: o D1 não empurra mudança para o navegador. Em vez de abrir uma
+ * conexão permanente, o módulo pergunta a cada 3 segundos qual a versão de
+ * cada coleção, e só busca de novo a que mudou. A pergunta é uma linha por
+ * tabela, e na maior parte das vezes a resposta é "nada mudou".
  */
 
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
-
+const INTERVALO_MS = 3000;
 const PREFIXO_USUARIO = "data/users/";
 
-// Cada escuta precisa do próprio canal. Dois canais com o mesmo nome se
-// atropelam, e a tela que assinou primeiro para de receber atualização.
-let proximoCanal = 0;
-
-/** Traduz o caminho da coleção para tabela e, quando for o caso, dono. */
+/** Coleções nomeadas pelo caminho que o aplicativo usa. */
 function resolver(caminho) {
-  if (caminho.startsWith(PREFIXO_USUARIO)) {
-    return { tabela: "user_data", uid: caminho.slice(PREFIXO_USUARIO.length) };
-  }
-  return { tabela: caminho, uid: null };
+  return caminho.startsWith(PREFIXO_USUARIO) ? "me" : caminho;
 }
 
-function ehObjetoSimples(v) {
-  return !!v && typeof v === "object" && !Array.isArray(v);
+async function pedir(caminho, opcoes = {}) {
+  const resposta = await fetch(`/api/${caminho}`, {
+    credentials: "same-origin",
+    ...opcoes,
+    headers: { "content-type": "application/json", ...(opcoes.headers || {}) },
+  });
+  if (!resposta.ok) {
+    const corpo = await resposta.json().catch(() => ({}));
+    throw new Error(corpo.erro || `Falha na requisição (${resposta.status})`);
+  }
+  return resposta.json();
 }
 
 /**
- * Mescla em profundidade, que é como o aplicativo espera que um update se
- * comporte: gravar `{items:{abc:...}}` acrescenta uma doação, não substitui
- * a lista inteira. Array e valor simples substituem.
+ * Um único relógio para todas as escutas. Pergunta as versões, e avisa só
+ * quem assina uma coleção que mudou.
  */
-function mesclar(base, novo) {
-  const saida = { ...base };
-  for (const chave of Object.keys(novo)) {
-    const atual = saida[chave];
-    const valor = novo[chave];
-    saida[chave] =
-      ehObjetoSimples(atual) && ehObjetoSimples(valor)
-        ? mesclar(atual, valor)
-        : valor;
+function criarVigia() {
+  const assinantes = new Map(); // coleção -> Set de funções
+  const versoes = new Map();
+  let rodando = false;
+
+  async function rodada() {
+    if (assinantes.size === 0) return;
+    const atual = await pedir("rev");
+    for (const [colecao, ouvintes] of assinantes) {
+      const versao = atual[colecao];
+      if (versao === undefined || versoes.get(colecao) === versao) continue;
+      versoes.set(colecao, versao);
+      for (const ouvinte of ouvintes) ouvinte();
+    }
   }
-  return saida;
+
+  function ligar() {
+    if (rodando) return;
+    rodando = true;
+    setInterval(() => {
+      rodada().catch(() => {
+        /* uma rodada que falha não derruba as próximas */
+      });
+    }, INTERVALO_MS);
+    // Volta a olhar assim que a aba volta para a frente.
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) rodada().catch(() => {});
+    });
+  }
+
+  return {
+    assinar(colecao, aoMudar) {
+      if (!assinantes.has(colecao)) assinantes.set(colecao, new Set());
+      assinantes.get(colecao).add(aoMudar);
+      ligar();
+      return () => {
+        const ouvintes = assinantes.get(colecao);
+        if (!ouvintes) return;
+        ouvintes.delete(aoMudar);
+        if (ouvintes.size === 0) assinantes.delete(colecao);
+      };
+    },
+    /** Depois de escrever, não espera o relógio: confere agora. */
+    conferirAgora() {
+      rodada().catch(() => {});
+    },
+  };
 }
 
-function criarDb(supabase) {
+function criarDb() {
+  const vigia = criarVigia();
+
   const db = {
-    /**
-     * Atalho para um documento por caminho, como em `db.doc("aprov/abc")`.
-     * O aplicativo usa as duas formas: pela coleção e por caminho direto.
-     */
+    /** Atalho por caminho, como em `db.doc("aprov/abc")`. */
     doc(caminho) {
       const corte = caminho.lastIndexOf("/");
-      const colecao = caminho.slice(0, corte);
-      const id = caminho.slice(corte + 1);
-      return db.collection(colecao).doc(id);
+      return db.collection(caminho.slice(0, corte)).doc(caminho.slice(corte + 1));
     },
 
     collection(caminho) {
-      const { tabela, uid } = resolver(caminho);
-
-      /** Restringe a consulta ao dono, quando a tabela tem dono. */
-      const escopo = (consulta) => (uid ? consulta.eq("uid", uid) : consulta);
-
-      const buscarTudo = async () => {
-        const { data, error } = await escopo(
-          supabase.from(tabela).select("id, data"),
-        );
-        if (error) throw error;
-        return {
-          docs: (data || []).map((linha) => ({
-            id: linha.id,
-            data: () => linha.data || {},
-          })),
-          metadata: { fromCache: false },
-        };
-      };
+      const colecao = resolver(caminho);
 
       return {
         doc(id) {
-          const chave = uid ? { uid, id } : { id };
+          const rota = `doc/${colecao}/${encodeURIComponent(id)}`;
+          const depois = (r) => {
+            vigia.conferirAgora();
+            return r;
+          };
 
           return {
-            async set(valor) {
-              const { error } = await supabase
-                .from(tabela)
-                .upsert({ ...chave, data: valor });
-              if (error) throw error;
+            set(valor) {
+              return pedir(rota, { method: "PUT", body: JSON.stringify(valor) }).then(depois);
             },
-
-            /** Mescla campos no documento, como um update de documento faz. */
-            async update(parcial) {
-              const { data: atual, error: erroLeitura } = await escopo(
-                supabase.from(tabela).select("data").eq("id", id),
-              ).maybeSingle();
-              if (erroLeitura) throw erroLeitura;
-
-              const { error } = await supabase
-                .from(tabela)
-                .upsert({ ...chave, data: mesclar(atual?.data || {}, parcial) });
-              if (error) throw error;
+            update(parcial) {
+              return pedir(rota, { method: "PATCH", body: JSON.stringify(parcial) }).then(depois);
             },
-
-            async delete() {
-              const { error } = await escopo(
-                supabase.from(tabela).delete().eq("id", id),
-              );
-              if (error) throw error;
+            delete() {
+              return pedir(rota, { method: "DELETE" }).then(depois);
             },
           };
         },
 
-        /**
-         * Entrega a coleção inteira agora e de novo a cada mudança.
-         * Devolve a função que cancela a escuta.
-         */
         onSnapshot(aoReceber, aoFalhar) {
           let vivo = true;
 
           const emitir = () =>
-            buscarTudo().then(
-              (snapshot) => vivo && aoReceber(snapshot),
-              (erro) => vivo && aoFalhar && aoFalhar(erro),
+            pedir(`col/${colecao}`).then(
+              (corpo) => {
+                if (!vivo) return;
+                aoReceber({
+                  docs: corpo.docs.map((d) => ({ id: d.id, data: () => d.data })),
+                  metadata: { fromCache: false },
+                });
+              },
+              (e) => vivo && aoFalhar && aoFalhar(e),
             );
 
           emitir();
-
-          const canal = supabase
-            .channel(`ifomme:${tabela}:${uid || "todos"}:${proximoCanal++}`)
-            .on(
-              "postgres_changes",
-              {
-                event: "*",
-                schema: "public",
-                table: tabela,
-                ...(uid ? { filter: `uid=eq.${uid}` } : {}),
-              },
-              emitir,
-            )
-            .subscribe();
+          const cancelarVigia = vigia.assinar(colecao, emitir);
 
           return () => {
             vivo = false;
-            supabase.removeChannel(canal);
+            cancelarVigia();
           };
         },
       };
@@ -161,64 +154,24 @@ function criarDb(supabase) {
 }
 
 async function conectar() {
-  const config = window.IFOMME_CONFIG || {};
-
-  if (!config.supabaseUrl || !config.supabaseKey) {
-    // Sem Supabase configurado, tenta o ambiente de origem do protótipo.
-    if (window.claude && window.claude.use) {
-      return {
-        db: await window.claude.use("db"),
-        user: await window.claude.use("user"),
-      };
-    }
-    return { db: null, user: null };
-  }
-
-  const supabase = createClient(config.supabaseUrl, config.supabaseKey);
-
-  // Conta anônima: o visitante não precisa se cadastrar para experimentar,
-  // mas tem um uid estável, que é o que o RLS usa.
-  //
-  // Se a conta anônima estiver desligada no painel, o app continua de pé em
-  // modo de leitura, porque a política de select vale para todo mundo. É
-  // melhor mostrar as instituições do que não abrir.
-  let { data: sessao } = await supabase.auth.getSession();
-  if (!sessao.session) {
-    const { error } = await supabase.auth.signInAnonymously();
-    if (error) {
-      console.warn(
-        "IFOMME: conta anônima indisponível, seguindo só com leitura.",
-        error.message,
-      );
-    } else {
-      ({ data: sessao } = await supabase.auth.getSession());
-    }
-  }
-
-  const uid = sessao.session?.user?.id || null;
+  const eu = await pedir("me");
 
   const user = {
     async id() {
-      return uid;
+      return eu.uid;
     },
     async canEdit() {
-      if (!uid) return false;
-      const { data } = await supabase
-        .from("admins")
-        .select("uid")
-        .eq("uid", uid)
-        .maybeSingle();
-      return !!data;
+      return !!eu.admin;
     },
   };
 
-  return { db: criarDb(supabase), user };
+  return { db: criarDb(), user };
 }
 
 conectar().then(
   (conexao) => window.__ifommeConectado(conexao),
   (erro) => {
-    console.error("IFOMME: não foi possível conectar ao banco.", erro);
+    console.error("IFOMME: não foi possível falar com a API.", erro);
     window.__ifommeConectado({ db: null, user: null });
   },
 );

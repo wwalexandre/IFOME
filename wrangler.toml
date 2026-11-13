@@ -1,0 +1,11 @@
+name = "ifomme"
+compatibility_date = "2026-10-01"
+pages_build_output_dir = "public"
+
+# O banco de documentos do IFOMME. A função em functions/api o recebe como
+# env.DB. O id abaixo é público: sem credencial da conta ele não serve para
+# nada, e quem decide o que cada visitante pode ler ou escrever é a função.
+[[d1_databases]]
+binding = "DB"
+database_name = "ifomme"
+database_id = "0334f39d-0e6d-450c-988d-52473bc47a51"
