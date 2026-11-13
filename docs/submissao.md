@@ -52,7 +52,7 @@ O núcleo do produto é casar oferta com necessidade, organizar coleta e entrega
 ## Repositório público
 
 ```
-https://github.com/wwalexandre/IFOME
+https://github.com/ifomme-app/IFOME
 ```
 
 ## Demo
